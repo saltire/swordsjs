@@ -11,5 +11,11 @@ app.use(morgan('dev'));
 
 app.use(routes);
 
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(err.status || 500).send(err.message);
+});
+
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}.`));

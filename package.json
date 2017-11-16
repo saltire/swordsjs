@@ -8,7 +8,7 @@
     "start": "node server/index.js",
     "watch": "env $(cat .env) nodemon server/index.js",
     "build": "webpack -p --config ./webpack.prod.js",
-    "postinstall": "npm run build",
+    "postinstall": "if [ -n \"$npm_config_production\" ]; then npm run build; fi",
     "lint": "eslint --ext .js,.jsx ."
   },
   "dependencies": {

@@ -1,22 +1,21 @@
 'use strict';
 
 const merge = require('webpack-merge');
-const webpack = require('webpack');
+const { HotModuleReplacementPlugin } = require('webpack');
 
 const common = require('./webpack.common.js');
 
 
 module.exports = merge(common, {
+  mode: 'development',
   entry: {
     index: [
-      'react-hot-loader/patch',
       'webpack-hot-middleware/client',
       './app/index.jsx',
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   plugins: [
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new HotModuleReplacementPlugin(),
   ],
 });

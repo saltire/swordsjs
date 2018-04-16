@@ -1,9 +1,10 @@
 import React from 'react';
+import { hot } from 'react-hot-loader';
 
 import './App.scss';
 
 
-export default function App() {
+function App() {
   return (
     <div className='App'>
       <header>
@@ -15,3 +16,5 @@ export default function App() {
     </div>
   );
 }
+
+export default hot(module)(App);

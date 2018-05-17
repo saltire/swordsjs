@@ -1,6 +1,7 @@
 'use strict';
 
 const HtmlPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 
@@ -9,8 +10,9 @@ module.exports = {
     index: './app/index.jsx',
   },
   output: {
-    filename: '[name].bundle.js',
-    chunkFilename: '[name].bundle.js',
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[chunkhash].js',
+    hashDigestLength: 8,
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
   },
@@ -29,18 +31,19 @@ module.exports = {
       },
       {
         test: /\.s?css$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: ['file-loader'],
+        test: /\.(jpe?g|gif|png|eot|svg|ttf|woff2?)$/,
+        use: [{
+          loader: 'file-loader',
+          options: { name: '[name].[hash:8].[ext]' },
+        }],
       },
     ],
   },
   optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
+    splitChunks: { chunks: 'all' },
   },
   resolve: {
     extensions: ['.js', '.jsx'],

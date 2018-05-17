@@ -8,7 +8,7 @@
     "start": "node server/index.js",
     "watch": "nodemon -r dotenv/config server/index.js",
     "build": "webpack -p --config webpack.prod.js",
-    "postinstall": "if [ -n \"$npm_config_production\" ]; then npm run build; fi",
+    "postinstall": "if test \"$NODE_ENV\" = \"production\"; then npm run build; fi",
     "lint": "eslint --ext .js,.jsx ."
   },
   "dependencies": {

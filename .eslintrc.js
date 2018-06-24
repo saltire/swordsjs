@@ -14,6 +14,7 @@ module.exports = {
     'no-underscore-dangle': [2, { allow: ['_id'] }],
     'object-curly-newline': [2, { multiline: true, consistent: true }],
     'radix': [2, 'as-needed'],
+    'react/jsx-one-expression-per-line': 0,
     'react/prop-types': 0,
     'strict': [2, 'global'],
   },

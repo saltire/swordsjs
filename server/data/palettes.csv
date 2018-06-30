@@ -1,0 +1,50 @@
+ACCENT(GOLD),,gem,pigmented,
+,gold mid,topaz,gilded,
+,steel mid,quartz,silvered,
+,gold light,radiite,*alabaster,
+,steel light,diamond,porcelain,
+,gold dark,*amber,bronzed,
+,steel dark,smokeglass,graphite,
+,pink red,blood quartz,scarlet,
+,orange red,carnelian,vermilion,
+,yellow red,firestone,flame-imbued,
+,yellow brown,brimstone,cadmium,
+,yellow green,glowing prehnite,chartreuse,
+,green,*emerald,jade,
+,*aqua,malachite,mint-green,
+,cyan blue,turquoise,cerulean,
+,pink purple,rose quartz,coral,
+,maroon,garnet,cinnabar,
+,dark grey,*onyx,kraken-ink,
+,dark gold,haematite,*ochre,
+,dark cyan,necrotite,verdigris,
+,dark pink,corundum,cosmos red,
+,cyan grey,beryl,robin's egg blue,
+,pink grey,tourmaline,lavender,
+,pink blue,crysynthallite,*opalescent,
+,yellow maroon,duskglass,sunplated,
+,yellow blue,dawnglass,moonplated,
+,,,,
+BASE (SILVER),,metal,nonmetal,crystal
+,steel mid,pewter,plastone,quartz
+,gold mid,*electrum,*ivory,dustglass
+,steel light,silver,petrified bone,zirconium
+,gold light,brass,bone,radiite
+,steel dark,titanium,boiled leather,smokeglass
+,gold dark,bronze,leather,*amber
+,grey red,bloodsteel,marrowbone,blood quartz
+,yellow,gold,*electric yew,sulphur-glass
+,yellow brown,rose gold,blondwood,vulcanite
+,*aqua,jade steel,ghost poplar,jade glass
+,blue green,*aquasilver,*oceanwood,seaglass
+,dark grey,*obsidian,jet,*obsidian
+,dark gold,*umbersteel,anthracite,*umberglass
+,dark cyan,neptunium,corpsewood,neptunium
+,dark pink,magentum,bloodstone,bloodglass
+,cyan grey,cobalt,phosphorus,phosphorglass
+,pink grey,rose steel,pink ivory,pink salt crystal
+,pink blue,synthochrome,synthstone,synthglass
+,yellow maroon,duskmetal,sunwood,duskglass
+,yellow blue,dawnmetal,moonwood,dawnglass
+,pearl,pearlite,mother-of-pearl,pearlglass
+,pearl white,milkstone,calcite,milkglass

@@ -23,13 +23,14 @@ module.exports = {
         const getPixel = pixelGetter(buffer, width, channels);
         const setPixel = pixelSetter(buffer, width, channels);
 
+        const colourEntries = [...colourSubs.entries()];
+
         range(width).forEach((x) => {
           range(height).forEach((y) => {
-            colourSubs.some(({ src, dest }) => {
-              const srcColour = getPixel(x, y);
-              const index = src.findIndex(s => s.every((c, i) => (c === srcColour[i])));
-              if (index > -1) {
-                setPixel(x, y, dest[index]);
+            const srcColour = getPixel(x, y);
+            colourEntries.some(([src, dest]) => {
+              if (src.every((c, i) => (c === srcColour[i]))) {
+                setPixel(x, y, dest);
                 return true;
               }
               return false;

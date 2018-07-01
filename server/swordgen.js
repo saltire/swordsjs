@@ -12,16 +12,12 @@ module.exports = {
     const layerParts = layers.reduce(
       (lps, layer) => Object.assign(lps, { [layer]: random(parts[layer]) }), {});
 
-    // TODO: refactor colourSubs to just be a map of src to dest palettes.
-    const colourSubs = [];
-    const materialSubs = {};
+    const colourSubs = new Map();
+    const materialSubs = new Map();
     paletteSets.forEach(({ srcColours, palettes }) => {
       const { colours, materials } = random(Object.values(palettes));
-      colourSubs.push({
-        src: srcColours,
-        dest: colours,
-      });
-      Object.assign(materialSubs, materials);
+      srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
+      Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
     });
 
     return {

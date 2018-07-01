@@ -5,7 +5,7 @@ module.exports = {
   // Fill in material keywords in a part description with materials from custom palettes.
   describePart(partDesc, materialSubs) {
     let desc = partDesc;
-    Object.entries(materialSubs).forEach(([material, name]) => {
+    [...materialSubs.entries()].forEach(([material, name]) => {
       desc = desc.replace(`$${material}`, name);
     });
 

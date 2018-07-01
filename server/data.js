@@ -6,6 +6,8 @@ const path = require('path');
 const sharp = require('sharp');
 const util = require('util');
 
+const { pixelGetter, range } = require('./utils');
+
 
 const partNamesFile = path.resolve(__dirname, './data/parts.csv');
 const partsDir = path.resolve(__dirname, './data/parts');
@@ -19,9 +21,9 @@ const layers = [
   'crossguard',
 ];
 
-const range = length => [...Array(length).keys()];
-
 module.exports = {
+  layers,
+
   // Get a list of descriptions for each part on each layer.
   getPartDescriptions() {
     return util.promisify(fs.readFile)(partNamesFile)
@@ -73,23 +75,17 @@ module.exports = {
   getColourSets() {
     const ph = 8;
     const image = sharp(paletteImage);
-    return image.metadata()
-      .then(({ width, height, channels }) => (
-        image
-          .raw()
-          .toBuffer()
-          .then((buffer) => {
-            const pixel = (x, y) => {
-              const offset = (y * width + x) * channels;
-              return Array.from(buffer.slice(offset, offset + channels));
-            };
 
-            return range(Math.floor(height / ph)) // each palette set
-              .map(p => (p * (ph + 1))) // the top of each palette set
-              .map(py => range(width) // each palette in the set
-                .filter(px => (pixel(px, py)[3] > 0)) // non-transparent pixels
-                .map(px => range(ph).map(x => pixel(px + x, py)))); // each of 8 pixels down
-          })));
+    return Promise.all([image.metadata(), image.raw().toBuffer()])
+      .then(([{ width, height, channels }, buffer]) => {
+        const getPixel = pixelGetter(buffer, width, channels);
+
+        return range(Math.floor(height / ph)) // each palette set
+          .map(p => (p * (ph + 1))) // the top of each palette set
+          .map(py => range(width) // each palette in the set
+            .filter(px => (getPixel(px, py)[3] > 0)) // non-transparent pixels
+            .map(px => range(ph).map(y => getPixel(px, py + y)))); // each of 8 pixels down
+      });
   },
 
   // Get a list of palettes and material names from a CSV file and add their colours.

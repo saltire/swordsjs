@@ -1,74 +1,32 @@
 'use strict';
 
-const sharp = require('sharp');
+const { layers } = require('./data');
+const image = require('./image');
+const text = require('./text');
+const { random } = require('./utils');
 
-const data = require('./data');
-const { pixelGetter, pixelSetter, random, range } = require('./utils');
-
-
-const options = {
-  width: 360,
-  height: 120,
-  channels: 4,
-  background: { r: 0, g: 0, b: 0, alpha: 0 },
-};
 
 module.exports = {
-  // Recolour a sword part with custom palettes.
-  colourPart(partPath, colourSubs) {
-    const image = sharp(partPath);
-
-    return Promise.all([image.metadata(), image.raw().toBuffer()])
-      .then(([{ width, height, channels }, buffer]) => {
-        const getPixel = pixelGetter(buffer, width, channels);
-        const setPixel = pixelSetter(buffer, width, channels);
-
-        range(width).forEach((x) => {
-          range(height).forEach((y) => {
-            colourSubs.some(({ src, dest }) => {
-              const srcColour = getPixel(x, y);
-              const index = src.findIndex(s => s.every((c, i) => (c === srcColour[i])));
-              if (index > -1) {
-                setPixel(x, y, dest[index]);
-                return true;
-              }
-              return false;
-            });
-          });
-        });
-
-        return buffer;
-      });
-  },
-
-  // Generate a composite image of a sword from of a set of parts and colour palettes.
-  drawSword(layerParts, colourSubs) {
-    let promise = sharp({ create: options }).toBuffer();
-
-    return Promise.all(data.layers
-      .map(layer => this.colourPart(layerParts[layer].path, colourSubs)))
-      .then((layerImgs) => {
-        layerImgs.forEach((layerImg) => {
-          // Chain promises in series.
-          promise = promise.then(buffer => sharp(buffer, { raw: options })
-            .overlayWith(layerImg, { raw: options })
-            .toBuffer());
-        });
-        return promise;
-      })
-      .then(buffer => sharp(buffer, { raw: options }));
-  },
-
   // Pick random parts and random palettes from a set of each, then generate an image.
-  createRandomSword(paletteSets, parts) {
-    const layerParts = data.layers.reduce(
+  async createRandomSword(paletteSets, parts) {
+    const layerParts = layers.reduce(
       (lps, layer) => Object.assign(lps, { [layer]: random(parts[layer]) }), {});
 
-    const colourSubs = paletteSets.map(paletteSet => ({
-      src: paletteSet.srcColours,
-      dest: random(Object.values(paletteSet.palettes)).colours,
-    }));
+    // TODO: refactor colourSubs to just be a map of src to dest palettes.
+    const colourSubs = [];
+    const materialSubs = {};
+    paletteSets.forEach(({ srcColours, palettes }) => {
+      const { colours, materials } = random(Object.values(palettes));
+      colourSubs.push({
+        src: srcColours,
+        dest: colours,
+      });
+      Object.assign(materialSubs, materials);
+    });
 
-    return this.drawSword(layerParts, colourSubs);
+    return {
+      image: await image.drawSword(layerParts, colourSubs),
+      text: text.describeSword(layerParts, materialSubs),
+    };
   },
 };

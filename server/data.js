@@ -125,4 +125,11 @@ module.exports = {
         return paletteSets;
       });
   },
+
+  async getData() {
+    return {
+      paletteSets: await this.getPaletteSets(await this.getColourSets()),
+      parts: await this.getParts(await this.getPartDescriptions()),
+    };
+  },
 };

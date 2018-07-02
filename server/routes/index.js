@@ -22,4 +22,15 @@ router.get('/sword/data', async (req, res) => {
   });
 });
 
+router.get('/sword/choices', async (req, res) => {
+  const choiceSets = await swordgen.selectRandomPaletteChoices();
+  res.json({
+    choiceSets: choiceSets
+      .map(({ choices }) => Object.values(choices)
+        .map(({ materials }) => Object.values(materials)
+          .map(mat => mat.replace('*', ''))
+          .join(' and '))),
+  });
+});
+
 router.use(app);

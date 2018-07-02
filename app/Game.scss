@@ -1,0 +1,28 @@
+.Game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  form {
+    margin: 0 2rem;
+
+    p {
+      margin: 1rem 0;
+
+      label {
+        display: block;
+      }
+    }
+  }
+
+  button {
+    padding: .5em 1em;
+    border: 0;
+    background: black;
+    color: #ccc;
+    font-size: 22px;
+    outline: none;
+  }
+}

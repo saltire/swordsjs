@@ -1,0 +1,33 @@
+.Sword {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .text {
+    margin: 0 2rem 2rem;
+
+    p {
+      margin: .5em 0;
+
+      strong {
+        color: #ccc;
+        font-weight: normal;
+      }
+    }
+  }
+
+  button {
+    padding: .5em 1em;
+    border: 0;
+    background: black;
+    color: #ccc;
+    font-size: 22px;
+    outline: none;
+
+    &[disabled] {
+      color: #666;
+    }
+  }
+}

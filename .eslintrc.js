@@ -13,6 +13,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'no-underscore-dangle': [2, { allow: ['_id'] }],
     'object-curly-newline': [2, { multiline: true, consistent: true }],
+    'operator-linebreak': [2, 'after'],
     'radix': [2, 'as-needed'],
     'react/jsx-one-expression-per-line': 0,
     'react/prop-types': 0,

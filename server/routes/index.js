@@ -4,6 +4,7 @@ const express = require('express');
 
 const app = require('./app');
 const swordgen = require('../swordgen');
+const { dataUrl } = require('../utils');
 
 
 const router = module.exports = express.Router();
@@ -16,20 +17,42 @@ router.get('/sword.png', async (req, res) => {
 
 router.get('/sword/data', async (req, res) => {
   const { image, text } = await swordgen.createRandomSword();
+
   res.json({
-    image: `data:image/png;base64,${(await image.png().toBuffer()).toString('base64')}`,
+    image: await dataUrl(image),
     desc: text,
   });
 });
 
-router.get('/sword/choices', async (req, res) => {
-  const choiceSets = await swordgen.selectRandomPaletteChoices();
-  res.json({
-    choiceSets: choiceSets
-      .map(({ choices }) => Object.values(choices)
+router.get('/sword/options', async (req, res) => {
+  const optionSets = await swordgen.selectRandomPaletteOptions();
+  req.session.optionSets = optionSets;
+
+  return res.json({
+    optionSets: optionSets
+      .map(({ palettes }) => Object.values(palettes)
         .map(({ materials }) => Object.values(materials)
           .map(mat => mat.replace('*', ''))
           .join(' and '))),
+  });
+});
+
+router.post('/sword/forge', async (req, res, next) => {
+  const { optionSets } = req.session;
+  if (!optionSets) {
+    return next(new Error('Session not found.'));
+  }
+  delete req.session.optionSets;
+
+  const { choices } = req.body;
+  if (!choices) {
+    return next(new Error('Choices not found.'));
+  }
+
+  const { image, text } = await swordgen.createSwordFromChoices(optionSets, choices);
+  return res.json({
+    image: await dataUrl(image),
+    desc: text,
   });
 });
 

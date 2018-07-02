@@ -2,6 +2,9 @@
 
 
 module.exports = {
+  dataUrl: async image => (
+    `data:image/png;base64,${(await image.png().toBuffer()).toString('base64')}`),
+
   random: array => array[Math.floor(Math.random() * array.length)],
 
   range: length => [...Array(length).keys()],

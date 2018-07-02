@@ -51,3 +51,17 @@ canvas {
     height: $height * 4;
   }
 }
+
+button {
+  padding: .5em 1em;
+  border: 0;
+  background: black;
+  color: #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+
+  &[disabled] {
+    color: #666;
+  }
+}

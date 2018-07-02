@@ -17,17 +17,4 @@
       }
     }
   }
-
-  button {
-    padding: .5em 1em;
-    border: 0;
-    background: black;
-    color: #ccc;
-    font-size: 22px;
-    outline: none;
-
-    &[disabled] {
-      color: #666;
-    }
-  }
 }

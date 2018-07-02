@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import './Sword.scss';
 import Canvas from './Canvas';
+import Description from './Description';
 
 
 export default class Sword extends Component {
@@ -41,15 +42,7 @@ export default class Sword extends Component {
     return (
       <div className='Sword'>
         <Canvas image={image} />
-        {desc && (
-          <div className='text'>
-            <p><strong>Crossguard:</strong> {desc.crossguard}.</p>
-            <p><strong>Grip:</strong> {desc.grip}.</p>
-            <p>
-              <strong>Blade:</strong> {desc.blade}{desc.bladedeco ? `, ${desc.bladedeco}` : '.'}
-            </p>
-          </div>
-        )}
+        <Description desc={desc} />
         <button type='button' disabled={loading} onClick={this.reload}>↻</button>
       </div>
     );

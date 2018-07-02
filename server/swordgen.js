@@ -31,25 +31,47 @@ module.exports = {
     return { colourSubs, materialSubs };
   },
 
-  async selectRandomPaletteChoices(count = 2) {
+  async selectRandomPaletteOptions(count = 2) {
     const { paletteSets } = await dataPromise;
 
     return paletteSets.map(({ srcColours, palettes }) => {
       const names = Object.keys(palettes);
-      const choices = {};
+      const paletteOptions = {};
       range(count).forEach(() => {
         const name = names.splice(Math.floor(Math.random() * names.length), 1);
-        choices[name] = palettes[name];
+        paletteOptions[name] = palettes[name];
       });
 
-      return { srcColours, choices };
+      return { srcColours, palettes: paletteOptions };
     });
+  },
+
+  getPaletteSubsFromChoices(paletteSets, choices) {
+    const colourSubs = new Map();
+    const materialSubs = new Map();
+    paletteSets.forEach(({ srcColours, palettes }, p) => {
+      const { colours, materials } = Object.values(palettes)[choices[p]];
+      srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
+      Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
+    });
+
+    return { colourSubs, materialSubs };
   },
 
   // Pick random parts and random palettes from a set of each, then generate an image.
   async createRandomSword() {
     const layerParts = await this.selectRandomParts();
     const { colourSubs, materialSubs } = await this.selectRandomPaletteSubs();
+
+    return {
+      image: await image.drawSword(layerParts, colourSubs),
+      text: text.describeSword(layerParts, materialSubs),
+    };
+  },
+
+  async createSwordFromChoices(paletteSets, choices) {
+    const layerParts = await this.selectRandomParts();
+    const { colourSubs, materialSubs } = this.getPaletteSubsFromChoices(paletteSets, choices);
 
     return {
       image: await image.drawSword(layerParts, colourSubs),

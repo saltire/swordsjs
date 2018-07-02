@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Sword.scss';
+import Canvas from './Canvas';
 
 
 export default class Sword extends Component {
@@ -9,11 +10,10 @@ export default class Sword extends Component {
     super(props);
 
     this.state = {
+      image: null,
       desc: null,
       loading: false,
     };
-
-    this.canvas = React.createRef();
 
     this.reload = this.reload.bind(this);
   }
@@ -29,33 +29,18 @@ export default class Sword extends Component {
       .then(
         (resp) => {
           const { image, desc } = resp.data;
-          this.setState({ desc });
-
-          const canvas = this.canvas.current;
-          const ctx = canvas.getContext('2d');
-
-          const img = new Image();
-          img.onload = () => {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            ctx.scale(canvas.width / 360, canvas.height / 120);
-            ctx.imageSmoothingEnabled = false;
-            ctx.mozImageSmoothingEnabled = false;
-
-            ctx.drawImage(img, 0, 0);
-          };
-          img.src = image;
+          this.setState({ image, desc });
         },
         console.error)
       .then(() => this.setState({ loading: false }));
   }
 
   render() {
-    const { desc, loading } = this.state;
+    const { image, desc, loading } = this.state;
 
     return (
       <div className='Sword'>
-        <canvas ref={this.canvas} />
+        <Canvas image={image} />
         {desc && (
           <div className='text'>
             <p><strong>Crossguard:</strong> {desc.crossguard}.</p>

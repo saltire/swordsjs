@@ -34,7 +34,7 @@ export default class Game extends Component {
       desc: null,
       loading: true,
     });
-    axios.get('/sword/options')
+    axios.get('/game/options')
       .then(
         resp => this.setState({ optionSets: resp.data.optionSets }),
         console.error)
@@ -45,7 +45,7 @@ export default class Game extends Component {
     const { choices } = this.state;
 
     this.setState({ loading: true });
-    axios.post('/sword/forge', { choices })
+    axios.post('/game/forge', { choices })
       .then(
         resp => this.setState({
           image: resp.data.image,

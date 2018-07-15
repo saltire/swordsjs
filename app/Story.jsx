@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Story.scss';
+import Canvas from './Canvas';
 import Materials from './Materials';
 
 
@@ -10,6 +11,7 @@ export default class Story extends Component {
     super(props);
 
     this.state = {
+      loading: false,
       story: null,
       choices: null,
     };
@@ -18,29 +20,33 @@ export default class Story extends Component {
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     axios.get('/story/state')
       .then(resp => this.setState({
         story: resp.data.story,
         choices: {},
       }))
-      .catch(console.error);
+      .catch(console.error)
+      .then(() => this.setState({ loading: false }));
   }
 
   continue() {
     const { story, choices } = this.state;
     const { optionSets } = story || {};
 
+    this.setState({ loading: true });
     axios.post('/story/continue', optionSets ? { choices } : {})
       .then(resp => this.setState({
         story: resp.data.story,
         choices: {},
       }))
-      .catch(console.error);
+      .catch(console.error)
+      .then(() => this.setState({ loading: false }));
   }
 
   render() {
-    const { story, choices } = this.state;
-    const { text, optionSets } = story || {};
+    const { loading, story, choices } = this.state;
+    const { text, optionSets, image } = story || {};
     const complete = !optionSets || (Object.keys(choices).length === optionSets.length);
 
     return story && (
@@ -55,7 +61,11 @@ export default class Story extends Component {
           />
         )}
 
-        <button type='button' disabled={!complete} onClick={this.continue}>Continue</button>
+        {image && <Canvas image={image} />}
+
+        <button type='button' disabled={loading || !complete} onClick={this.continue}>
+          Continue
+        </button>
       </div>
     );
   }

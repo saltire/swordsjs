@@ -2,6 +2,7 @@
 
 const express = require('express');
 
+const swordgen = require('../lib/swordgen');
 const { random } = require('../lib/utils');
 
 
@@ -20,7 +21,7 @@ const effects = [
   'eats the souls of my victims',
 ];
 
-function nextStage(currentStory) {
+async function nextStage(currentStory) {
   const story = Object.assign({}, currentStory || {});
 
   // Advance to the next stage, or go back to the first if finished.
@@ -28,28 +29,49 @@ function nextStage(currentStory) {
 
   // Build text for this stage.
   story.text = stages[story.stage];
+
   if (story.stage === 'request') {
     story.text = story.text.replace('$effect', random(effects));
+  }
+
+  if (story.stage === 'materials') {
+    story.optionSets = await swordgen.selectRandomPaletteOptions();
+  }
+
+  if (story.stage === 'forge') {
+    delete story.optionSets;
   }
 
   return story;
 }
 
+function formatStoryData(story) {
+  return {
+    text: story.text,
+    optionSets: story.optionSets && story.optionSets
+      .map(({ palettes }) => Object.values(palettes)
+        .map(({ materials }) => Object.values(materials)
+          .map(mat => mat.replace('*', ''))
+          .join(' and '))),
+  };
+}
+
 const router = module.exports = express.Router();
 
-router.get('/state', (req, res) => {
-  if (!req.session.story) {
-    req.session.story = nextStage();
-  }
-
-  const { story } = req.session;
-
-  res.json({ text: story.text });
+router.get('/state', (req, res, next) => {
+  Promise.resolve(req.session.story || nextStage())
+    .then((story) => {
+      req.session.story = story;
+      res.json({ story: formatStoryData(req.session.story) });
+    })
+    .catch(next);
 });
 
-router.post('/continue', (req, res) => {
-  const story = nextStage(req.session.story);
-  req.session.story = story;
-
-  res.json({ text: story.text });
+router.post('/continue', (req, res, next) => {
+  nextStage(req.session.story)
+    .then((story) => {
+      req.session.story = story;
+      res.json({ story: formatStoryData(req.session.story) });
+    })
+    .catch(next);
 });

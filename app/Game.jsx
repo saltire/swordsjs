@@ -4,6 +4,7 @@ import axios from 'axios';
 import './Game.scss';
 import Canvas from './Canvas';
 import Description from './Description';
+import Materials from './Materials';
 
 
 export default class Game extends Component {
@@ -59,7 +60,6 @@ export default class Game extends Component {
     const { optionSets, choices, image, desc, loading } = this.state;
     const complete = optionSets && (Object.keys(choices).length === optionSets.length);
 
-    /* eslint-disable react/no-array-index-key */
     return (
       <div className='Game'>
         {image && desc ? (
@@ -68,29 +68,18 @@ export default class Game extends Component {
             <Description desc={desc} />
           </Fragment>
         ) : (
-          <Fragment>
-            <form>
-              {optionSets && optionSets.map((optionSet, i) => (
-                <p key={i}>
-                  {optionSet.map((option, j) => (
-                    <label key={j}>
-                      <input
-                        type='radio'
-                        checked={choices[i] === j}
-                        onChange={e => (e.target.checked && this.setState(prevState => ({
-                          choices: Object.assign({}, prevState.choices, { [i]: j }),
-                        })))}
-                      />
-                      {option}
-                    </label>
-                  ))}
-                </p>
-              ))}
-            </form>
-            <button type='button' disabled={loading || !complete} onClick={this.forge}>
-              Forge
-            </button>
-          </Fragment>
+          optionSets && (
+            <Fragment>
+              <Materials
+                optionSets={optionSets}
+                choices={choices}
+                onUpdate={ch => this.setState({ choices: ch })}
+              />
+              <button type='button' disabled={loading || !complete} onClick={this.forge}>
+                Forge
+              </button>
+            </Fragment>
+          )
         )}
 
         <button type='button' disabled={loading} onClick={this.start}>↻</button>

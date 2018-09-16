@@ -18,6 +18,10 @@ module.exports = {
     match => (/^\$[a-z]/.test(match) ? replace :
       (replace.charAt(0).toUpperCase() + replace.slice(1)))),
 
+  // Look for verbs in plural|singular format, and use the conjugation matching the pronoun.
+  conjugate: (text, usePlural) => text.replace(/(\w+)\|(\w+)/g,
+    (match, plural, singular) => (usePlural ? plural : singular)),
+
   dataUrl: async image => (
     `data:image/png;base64,${(await image.png().toBuffer()).toString('base64')}`),
 

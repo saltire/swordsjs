@@ -32,7 +32,7 @@ module.exports = {
   himPronouns: {
     m: 'him',
     f: 'her',
-    n: 'they',
+    n: 'them',
   },
 
   hisPronouns: {

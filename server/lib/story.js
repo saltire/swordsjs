@@ -3,7 +3,7 @@
 const data = require('./data');
 const swordgen = require('./swordgen');
 const text = require('./text');
-const { aToAn, caseSub, dataUrl, random } = require('./utils');
+const { aToAn, caseSub, conjugate, dataUrl, random } = require('./utils');
 
 
 // Fetch data in advance.
@@ -32,8 +32,7 @@ module.exports = {
       story.character = {
         adjective: random(charData.adjectives),
         noun: random(charData.nouns),
-        // gender: random(['m', 'f', 'n']), // TODO: conjugate verbs for 'they'
-        gender: random(['m', 'f']),
+        pronoun: random(['m', 'f', 'n']),
       };
     }
     else if (story.stage === 'Components') {
@@ -50,9 +49,10 @@ module.exports = {
       story.text = caseSub(story.text, '$characterfull',
         `${story.character.adjective} ${story.character.noun}`);
       story.text = caseSub(story.text, '$character', story.character.noun);
-      story.text = caseSub(story.text, '$he', text.hePronouns[story.character.gender]);
-      story.text = caseSub(story.text, '$him', text.himPronouns[story.character.gender]);
-      story.text = caseSub(story.text, '$his', text.hisPronouns[story.character.gender]);
+      story.text = caseSub(story.text, '$he', text.hePronouns[story.character.pronoun]);
+      story.text = caseSub(story.text, '$him', text.himPronouns[story.character.pronoun]);
+      story.text = caseSub(story.text, '$his', text.hisPronouns[story.character.pronoun]);
+      story.text = conjugate(story.text, story.character.pronoun === 'n');
     }
     if (story.descs) {
       story.text = caseSub(story.text, '$blade',

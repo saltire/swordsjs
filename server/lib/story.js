@@ -3,7 +3,7 @@
 const data = require('./data');
 const swordgen = require('./swordgen');
 const text = require('./text');
-const { dataUrl, random } = require('./utils');
+const { aToAn, caseSub, dataUrl, random } = require('./utils');
 
 
 // Fetch data in advance.
@@ -32,7 +32,8 @@ module.exports = {
       story.character = {
         adjective: random(charData.adjectives),
         noun: random(charData.nouns),
-        gender: random('m', 'f', 'n'),
+        // gender: random(['m', 'f', 'n']), // TODO: conjugate verbs for 'they'
+        gender: random(['m', 'f']),
       };
     }
     else if (story.stage === 'Components') {
@@ -46,21 +47,21 @@ module.exports = {
 
     // Make any applicable text substitutions.
     if (story.character) {
-      story.text = text.caseSub(story.text, '$characterfull',
+      story.text = caseSub(story.text, '$characterfull',
         `${story.character.adjective} ${story.character.noun}`);
-      story.text = text.caseSub(story.text, '$character', story.character.noun);
-      story.text = text.caseSub(story.text, '$he', text.hePronouns[story.character.gender]);
-      story.text = text.caseSub(story.text, '$him', text.himPronouns[story.character.gender]);
-      story.text = text.caseSub(story.text, '$his', text.hisPronouns[story.character.gender]);
+      story.text = caseSub(story.text, '$character', story.character.noun);
+      story.text = caseSub(story.text, '$he', text.hePronouns[story.character.gender]);
+      story.text = caseSub(story.text, '$him', text.himPronouns[story.character.gender]);
+      story.text = caseSub(story.text, '$his', text.hisPronouns[story.character.gender]);
     }
     if (story.descs) {
-      story.text = text.caseSub(story.text, '$blade',
+      story.text = caseSub(story.text, '$blade',
         `${story.descs.blade}${story.descs.bladedeco ? `, ${story.descs.bladedeco}` : ''}`);
-      story.text = text.caseSub(story.text, '$crossguard', story.descs.crossguard);
-      story.text = text.caseSub(story.text, '$grip', story.descs.grip);
+      story.text = caseSub(story.text, '$crossguard', story.descs.crossguard);
+      story.text = caseSub(story.text, '$grip', story.descs.grip);
     }
 
-    story.text = text.aToAn(story.text);
+    story.text = aToAn(story.text);
 
     return story;
   },

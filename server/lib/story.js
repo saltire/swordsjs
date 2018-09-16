@@ -1,51 +1,66 @@
 'use strict';
 
-const swordgen = require('../lib/swordgen');
-const { dataUrl, random } = require('../lib/utils');
+const data = require('./data');
+const swordgen = require('./swordgen');
+const text = require('./text');
+const { dataUrl, random } = require('./utils');
 
 
-const stages = {
-  request: 'A customer enters the shop. “I need a sword that $effect,” they say.',
-  materials: 'You gather materials from the back of the shop, narrowing them down to a couple of choices.',
-  forge: 'You shape the metal into a blade, and decorate it with gems.',
-  deliver: 'The customer takes the blade, says “Thank you,” and leaves.',
-};
-const stageIds = Object.keys(stages);
-
-const effects = [
-  'shoots fire',
-  'glows in the dark',
-  'makes me look rich',
-  'eats the souls of my victims',
-];
+// Fetch data in advance.
+const dataPromise = Promise.all(
+  [
+    data.getCharacterData(),
+    data.getStoryPages(),
+  ])
+  .then(([charData, pages]) => ({ charData, pages }));
 
 module.exports = {
-  async nextStage(currentStory, data) {
+  async nextStage(currentStory, input) {
+    const { charData, pages } = await dataPromise;
+    const stageIds = Object.keys(pages);
+
     const story = Object.assign({}, currentStory || {});
 
     // Advance to the next stage, or go back to the first if finished.
     story.stage = stageIds[(stageIds.indexOf(story.stage) + 1) % stageIds.length];
 
     // Build text for this stage.
-    story.text = stages[story.stage];
+    story.text = random(pages[story.stage]);
 
-    if (story.stage === 'request') {
-      story.text = story.text.replace('$effect', random(effects));
+    // Update the story object.
+    if (story.stage === 'Character') {
+      story.character = {
+        adjective: random(charData.adjectives),
+        noun: random(charData.nouns),
+        gender: random('m', 'f', 'n'),
+      };
     }
-
-    if (story.stage === 'materials') {
+    else if (story.stage === 'Components') {
       story.optionSets = await swordgen.selectRandomPaletteOptions();
     }
-
-    if (story.stage === 'forge') {
-      const { image } = await swordgen.createSwordFromChoices(story.optionSets, data.choices);
-      story.image = await dataUrl(image);
-      delete story.optionSets;
+    else if (story.stage === 'Forging') {
+      const sword = await swordgen.createSwordFromChoices(story.optionSets, input.choices);
+      story.image = await dataUrl(sword.image);
+      story.descs = sword.text;
     }
 
-    if (story.stage === 'deliver') {
-      delete story.image;
+    // Make any applicable text substitutions.
+    if (story.character) {
+      story.text = text.caseSub(story.text, '$characterfull',
+        `${story.character.adjective} ${story.character.noun}`);
+      story.text = text.caseSub(story.text, '$character', story.character.noun);
+      story.text = text.caseSub(story.text, '$he', text.hePronouns[story.character.gender]);
+      story.text = text.caseSub(story.text, '$him', text.himPronouns[story.character.gender]);
+      story.text = text.caseSub(story.text, '$his', text.hisPronouns[story.character.gender]);
     }
+    if (story.descs) {
+      story.text = text.caseSub(story.text, '$blade',
+        `${story.descs.blade}${story.descs.bladedeco ? `, ${story.descs.bladedeco}` : ''}`);
+      story.text = text.caseSub(story.text, '$crossguard', story.descs.crossguard);
+      story.text = text.caseSub(story.text, '$grip', story.descs.grip);
+    }
+
+    story.text = text.aToAn(story.text);
 
     return story;
   },
@@ -53,13 +68,14 @@ module.exports = {
   formatStoryData(story) {
     return {
       text: story.text,
-      optionSets: story.optionSets && story.optionSets
+      optionSets: story.stage !== 'Components' ? undefined : story.optionSets
         .map(({ palettes }) => Object.values(palettes)
           .map(({ materials }) => Object.values(materials)
             .map(mat => mat.replace('*', ''))
             .join(' and '))),
-      image: story.image,
+      image: story.stage !== 'Description' ? undefined : story.image,
       desc: story.desc,
+      end: story.stage === 'Delivery',
     };
   },
 };

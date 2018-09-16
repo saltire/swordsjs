@@ -46,7 +46,7 @@ export default class Story extends Component {
 
   render() {
     const { loading, story, choices } = this.state;
-    const { text, optionSets, image } = story || {};
+    const { text, optionSets, image, end } = story || {};
     const complete = !optionSets || (Object.keys(choices).length === optionSets.length);
 
     return story && (
@@ -64,7 +64,7 @@ export default class Story extends Component {
         {image && <Canvas image={image} />}
 
         <button type='button' disabled={loading || !complete} onClick={this.continue}>
-          Continue
+          {end ? 'Start again' : 'Continue'}
         </button>
       </div>
     );

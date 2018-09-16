@@ -6,10 +6,12 @@ const sharp = require('sharp');
 const { pixelGetter, range, readCsv, readDir } = require('./utils');
 
 
-const partNamesFile = path.resolve(__dirname, './data/parts.csv');
-const partsDir = path.resolve(__dirname, './data/parts');
-const paletteImage = path.resolve(__dirname, './data/palette8.png');
-const paletteNamesFile = path.resolve(__dirname, './data/palettes.csv');
+const charactersFile = path.resolve(__dirname, 'data/characters.csv');
+const partNamesFile = path.resolve(__dirname, 'data/parts.csv');
+const partsDir = path.resolve(__dirname, 'data/parts');
+const paletteImage = path.resolve(__dirname, 'data/palette8.png');
+const paletteNamesFile = path.resolve(__dirname, 'data/palettes.csv');
+const storyFile = path.resolve(__dirname, 'data/story.csv');
 
 const layers = [
   'grip',
@@ -122,5 +124,25 @@ module.exports = {
     });
 
     return paletteSets;
+  },
+
+  async getCharacterData() {
+    const [adjectives, nouns] = await readCsv(charactersFile);
+
+    return {
+      adjectives: adjectives.filter(a => a),
+      nouns: nouns.filter(n => n),
+    };
+  },
+
+  async getStoryPages() {
+    const rows = await readCsv(storyFile);
+    const pages = {};
+
+    rows.forEach(([name, ...entries]) => {
+      pages[name] = entries.filter(e => e);
+    });
+
+    return pages;
   },
 };

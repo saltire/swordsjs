@@ -1,5 +1,13 @@
 'use strict';
 
+const csvParse = require('csv-parse');
+const fs = require('fs');
+const util = require('util');
+
+const parseCsv = util.promisify(csvParse);
+const readDir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
+
 
 module.exports = {
   dataUrl: async image => (
@@ -18,4 +26,12 @@ module.exports = {
     const offset = (y * width + x) * channels;
     pix.forEach((c, i) => buffer.writeUInt8(c, offset + i));
   },
+
+  async readCsv(filename) {
+    return parseCsv(await readFile(filename));
+  },
+
+  readDir,
+
+  readFile,
 };

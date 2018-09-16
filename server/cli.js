@@ -1,6 +1,6 @@
 'use strict';
 
-const swordgen = require('./swordgen');
+const swordgen = require('./lib/swordgen');
 
 
 async function main() {

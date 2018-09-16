@@ -7,7 +7,12 @@ const { random, range } = require('./utils');
 
 
 // Fetch data in advance.
-const dataPromise = data.getData();
+const dataPromise = Promise.all(
+  [
+    data.getPaletteSets(),
+    data.getParts(),
+  ])
+  .then(([paletteSets, parts]) => ({ paletteSets, parts }));
 
 module.exports = {
   async selectRandomParts() {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import reactStringReplace from 'react-string-replace';
 
 import './Story.scss';
 import Canvas from './Canvas';
@@ -46,12 +47,15 @@ export default class Story extends Component {
 
   render() {
     const { loading, story, choices } = this.state;
-    const { text, optionSets, image, end } = story || {};
+    const { text, charColour, optionSets, image, end } = story || {};
     const complete = !optionSets || (Object.keys(choices).length === optionSets.length);
 
     return story && (
       <div className='Story'>
-        <p>{text}</p>
+        <p>
+          {!charColour ? text : reactStringReplace(text, /["“”](.*?)["“”]/g,
+            (match, i) => <span key={i} style={{ color: charColour }}>“{match}”</span>)}
+        </p>
 
         {optionSets && (
           <Materials

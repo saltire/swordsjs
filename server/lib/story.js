@@ -14,6 +14,10 @@ const dataPromise = Promise.all(
   ])
   .then(([charData, pages]) => ({ charData, pages }));
 
+const colours = [
+  '#df3e23', '#fa6a0a', '#f9a31b', '#fffc40', '#59c135', '#249fde', '#20d6c7', '#f5a097',
+  '#e86a73', '#bc4a9b', '#bb7547', '#dba463', '#ba756a', '#849be4', '#5daf8d', '#a08662'];
+
 module.exports = {
   async nextStage(currentStory, input) {
     const { charData, pages } = await dataPromise;
@@ -33,6 +37,7 @@ module.exports = {
         adjective: random(charData.adjectives),
         noun: random(charData.nouns),
         pronoun: random(['m', 'f', 'n']),
+        colour: random(colours),
       };
     }
     else if (story.stage === 'Components') {
@@ -69,6 +74,7 @@ module.exports = {
   formatStoryData(story) {
     return {
       text: story.text,
+      charColour: story.character && story.character.colour,
       optionSets: story.stage !== 'Components' ? undefined : story.optionSets
         .map(({ palettes }) => Object.values(palettes)
           .map(({ materials }) => Object.values(materials)

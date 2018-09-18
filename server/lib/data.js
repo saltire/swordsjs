@@ -6,12 +6,12 @@ const sharp = require('sharp');
 const { pixelGetter, range, readCsv, readDir } = require('./utils');
 
 
-const charactersFile = path.resolve(__dirname, 'data/characters.csv');
-const partNamesFile = path.resolve(__dirname, 'data/parts.csv');
-const partsDir = path.resolve(__dirname, 'data/parts');
-const paletteImage = path.resolve(__dirname, 'data/palette8.png');
-const paletteNamesFile = path.resolve(__dirname, 'data/palettes.csv');
-const storyFile = path.resolve(__dirname, 'data/story.csv');
+const charactersFile = path.resolve(__dirname, '../data/characters.csv');
+const partNamesFile = path.resolve(__dirname, '../data/parts.csv');
+const partsDir = path.resolve(__dirname, '../data/parts');
+const paletteImage = path.resolve(__dirname, '../data/palette8.png');
+const paletteNamesFile = path.resolve(__dirname, '../data/palettes.csv');
+const storyFile = path.resolve(__dirname, '../data/story.csv');
 
 const layers = [
   'grip',

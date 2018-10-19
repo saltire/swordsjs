@@ -12,7 +12,7 @@ export default class Story extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       story: null,
       choices: null,
     };
@@ -21,14 +21,13 @@ export default class Story extends Component {
   }
 
   componentDidMount() {
-    this.setState({ loading: true });
     axios.get('/story/state')
       .then(resp => this.setState({
         story: resp.data.story,
         choices: {},
       }))
       .catch(console.error)
-      .then(() => this.setState({ loading: false }));
+      .finally(() => setTimeout(() => this.setState({ loading: false }), 10));
   }
 
   continue() {
@@ -36,13 +35,15 @@ export default class Story extends Component {
     const { optionSets } = story || {};
 
     this.setState({ loading: true });
-    axios.post('/story/continue', optionSets ? { choices } : {})
-      .then(resp => this.setState({
-        story: resp.data.story,
-        choices: {},
-      }))
-      .catch(console.error)
-      .then(() => this.setState({ loading: false }));
+    setTimeout(() => {
+      axios.post('/story/continue', optionSets ? { choices } : {})
+        .then(resp => this.setState({
+          story: resp.data.story,
+          choices: {},
+        }))
+        .catch(console.error)
+        .finally(() => this.setState({ loading: false }));
+    }, 750);
   }
 
   render() {
@@ -51,7 +52,7 @@ export default class Story extends Component {
     const complete = !optionSets || (Object.keys(choices).length === optionSets.length);
 
     return story && (
-      <div className='Story'>
+      <div className={`Story${loading ? ' hidden' : ''}`}>
         <p>
           {!charColour ? text : reactStringReplace(text, /["“”](.*?)["“”]/g,
             (match, i) => <span key={i} style={{ color: charColour }}>“{match}”</span>)}

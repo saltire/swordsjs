@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'kingthings_foundation';
-  src: url('./static/Kingthings_Foundation.woff') format('woff');
+  font-family: 'kingthings_exeter';
+  src: url('./static/Kingthings_Exeter.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -18,7 +18,13 @@ body {
   background: black;
   color: white;
   font-size: 20px;
-  font-family: kingthings_foundation;
+  font-family: kingthings_exeter;
+  line-height: 23px;
+  letter-spacing: .03em;
+}
+
+.App {
+  margin: 0 1.5rem;
 }
 
 canvas {
@@ -52,16 +58,38 @@ canvas {
   }
 }
 
+p {
+  margin: 1rem 0;
+
+  strong {
+    color: #ccc;
+    font-weight: normal;
+  }
+
+    label {
+      display: block;
+      padding-left: 1.5rem;
+
+      .input {
+        display: inline-block;
+        width: 1.5rem;
+        margin-left: -1.5rem;
+      }
+    }
+}
+
 button {
-  padding: .5em 1em;
+  padding: .4em 1em;
   border: 0;
-  background: black;
+  border-radius: 10px;
+  background: #222;
   color: #ccc;
   font-family: inherit;
   font-size: inherit;
   outline: none;
 
   &[disabled] {
+    background: #111;
     color: #666;
   }
 }

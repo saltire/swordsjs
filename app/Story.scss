@@ -5,16 +5,9 @@
   align-items: center;
   height: 100%;
   padding: 0 2rem;
+  transition: opacity 750ms;
 
-  form {
-    margin: 0 2rem;
-
-    p {
-      margin: 1rem 0;
-
-      label {
-        display: block;
-      }
-    }
+  &.hidden {
+    opacity: 0;
   }
 }

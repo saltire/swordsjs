@@ -16,15 +16,20 @@ export default class Game extends Component {
       choices: {},
       image: null,
       desc: null,
-      loading: false,
+      loading: true,
     };
 
-    this.start = this.start.bind(this);
     this.forge = this.forge.bind(this);
+    this.restart = this.restart.bind(this);
   }
 
   componentDidMount() {
     this.start();
+  }
+
+  restart() {
+    this.setState({ loading: true });
+    setTimeout(() => this.start(), 750);
   }
 
   start() {
@@ -33,27 +38,28 @@ export default class Game extends Component {
       choices: {},
       image: null,
       desc: null,
-      loading: true,
     });
+
     axios.get('/game/options')
-      .then(
-        resp => this.setState({ optionSets: resp.data.optionSets }),
-        console.error)
-      .then(() => this.setState({ loading: false }));
+      .then(resp => this.setState({ optionSets: resp.data.optionSets }))
+      .catch(console.error)
+      .finally(() => setTimeout(() => this.setState({ loading: false }), 10));
   }
 
   forge() {
     const { choices } = this.state;
 
     this.setState({ loading: true });
-    axios.post('/game/forge', { choices })
-      .then(
-        resp => this.setState({
-          image: resp.data.image,
-          desc: resp.data.desc,
-        }),
-        console.error)
-      .then(() => this.setState({ loading: false }));
+    setTimeout(() => {
+      axios.post('/game/forge', { choices })
+        .then(
+          resp => this.setState({
+            image: resp.data.image,
+            desc: resp.data.desc,
+          }),
+          console.error)
+        .then(() => this.setState({ loading: false }));
+    }, 750);
   }
 
   render() {
@@ -61,11 +67,12 @@ export default class Game extends Component {
     const complete = optionSets && (Object.keys(choices).length === optionSets.length);
 
     return (
-      <div className='Game'>
+      <div className={`Game${loading ? ' hidden' : ''}`}>
         {image && desc ? (
           <Fragment>
             <Canvas image={image} />
             <Description desc={desc} />
+            <button type='button' disabled={loading} onClick={this.restart}>↻</button>
           </Fragment>
         ) : (
           optionSets && (
@@ -81,8 +88,6 @@ export default class Game extends Component {
             </Fragment>
           )
         )}
-
-        <button type='button' disabled={loading} onClick={this.start}>↻</button>
       </div>
     );
   }

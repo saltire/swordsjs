@@ -31,7 +31,6 @@ export default class Canvas extends Component {
         canvas.height = canvas.clientHeight;
         ctx.scale(canvas.width / 360, canvas.height / 120);
         ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
 
         ctx.drawImage(img, 0, 0);
       };

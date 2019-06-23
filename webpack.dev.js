@@ -15,6 +15,11 @@ module.exports = merge(common, {
       './app/index.jsx',
     ],
   },
+  resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
+  },
   devtool: 'eval-source-map',
   plugins: [
     new HotModuleReplacementPlugin(),

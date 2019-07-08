@@ -24,3 +24,8 @@ router.post('/continue', (req, res, next) => {
     })
     .catch(next);
 });
+
+router.get('/start', (req, res) => {
+  delete req.session.story;
+  res.redirect('/story');
+});

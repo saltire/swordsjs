@@ -51,7 +51,7 @@ module.exports = {
         layerImgs.forEach((layerImg) => {
           // Chain promises in series.
           promise = promise.then(buffer => sharp(buffer, { raw: options })
-            .overlayWith(layerImg, { raw: options })
+            .composite([{ input: layerImg, raw: options }])
             .toBuffer());
         });
         return promise;

@@ -11,8 +11,8 @@ const dataPromise = Promise.all(
   [
     data.getCharacterData(),
     data.getStoryChapters(),
-  ])
-  .then(([charData, chapters]) => ({ charData, chapters }));
+    data.getWeather(),
+  ]);
 
 const colours = [
   '#df3e23', '#fa6a0a', '#f9a31b', '#fffc40', '#59c135', '#249fde', '#20d6c7', '#f5a097',
@@ -20,7 +20,7 @@ const colours = [
 
 module.exports = {
   async nextStage(currentStory, input) {
-    const { charData, chapters } = await dataPromise;
+    const [charData, chapters, weather] = await dataPromise;
 
     // Copy the ongoing story object, if it exists and isn't finished.
     const story = (currentStory && !currentStory.end) ? Object.assign({}, currentStory) : {};
@@ -34,7 +34,13 @@ module.exports = {
     // Build text for this stage, stripping tags from the beginning.
     story.tags = [];
     story.text = story.chapter[story.page]
-      .replace(/\*(\w+)\n/g, (_, tag) => {
+      .replace(/\*(\w+)\s*/g, (_, tag) => {
+        // Some tags can be replaced immediately with text.
+        if (tag === 'weather') {
+          return random(weather);
+        }
+
+        // Other tags get pushed on the stack to be dealt with later.
         story.tags.push(tag);
         return '';
       });
@@ -91,8 +97,8 @@ module.exports = {
       charColour: story.character && story.character.colour,
       optionSets: story.optionSets && !story.descs && story.optionSets
         .map(({ palettes }) => Object.values(palettes)
-          .map(({ materials }) => Object.values(materials)
-            .map(mat => mat.replace('*', ''))
+          .map(({ materials }) => Array.from(new Set(Object.values(materials)
+            .map(mat => mat.replace('*', ''))))
             .join(' and '))),
       image: story.tags.includes('image') ? story.image : undefined,
       desc: story.desc,

@@ -12,6 +12,7 @@ const partNamesFile = path.resolve(__dirname, '../data/parts.csv');
 const partsDir = path.resolve(__dirname, '../data/parts');
 const paletteImage = path.resolve(__dirname, '../data/palette8.png');
 const paletteNamesFile = path.resolve(__dirname, '../data/palettes.csv');
+const weatherFile = path.resolve(__dirname, '../data/weather.csv');
 
 const layers = [
   'grip',
@@ -138,5 +139,10 @@ module.exports = {
   async getStoryChapters() {
     const rows = await readCsv(chaptersFile);
     return rows.map(row => row.filter(Boolean));
+  },
+
+  async getWeather() {
+    const rows = await readCsv(weatherFile);
+    return rows.map(row => row[0]);
   },
 };

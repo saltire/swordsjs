@@ -117,8 +117,7 @@ module.exports = {
       else if (name) {
         const paletteSet = paletteSets[paletteSets.length - 1];
         paletteSet.palettes[name] = {
-          materials: materials
-            .reduce((pms, mat, i) => Object.assign(pms, { [mat]: entries[i] }), {}),
+          materials: materials.reduce((pms, mat, i) => ({ ...pms, [mat]: entries[i] }), {}),
           colours: colours[Object.keys(paletteSet.palettes).length],
         };
       }

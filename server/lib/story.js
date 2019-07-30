@@ -23,7 +23,7 @@ module.exports = {
     const [charData, chapters, weather] = await dataPromise;
 
     // Copy the ongoing story object, if it exists and isn't finished.
-    const story = (currentStory && !currentStory.end) ? Object.assign({}, currentStory) : {};
+    const story = (currentStory && !currentStory.end) ? { ...currentStory } : {};
 
     // Choose a random chapter and go to the first page.
     if (!story.chapter) {

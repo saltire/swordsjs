@@ -13,8 +13,7 @@ export default function Materials({ optionSets, choices, onUpdate }) {
                 <input
                   type='radio'
                   checked={choices[i] === j}
-                  onChange={e => (e.target.checked &&
-                    onUpdate(Object.assign({}, choices, { [i]: j })))}
+                  onChange={e => (e.target.checked && onUpdate({ ...choices, [i]: j }))}
                 />
               </span>
               {option}

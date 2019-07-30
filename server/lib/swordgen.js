@@ -18,8 +18,7 @@ module.exports = {
   async selectRandomParts() {
     const { parts } = await dataPromise;
 
-    return data.layers.reduce(
-      (lps, layer) => Object.assign(lps, { [layer]: random(parts[layer]) }), {});
+    return data.layers.reduce((lps, layer) => ({ ...lps, [layer]: random(parts[layer]) }), {});
   },
 
   async selectRandomPaletteSubs() {

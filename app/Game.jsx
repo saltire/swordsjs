@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 
 import './Game.scss';
@@ -69,14 +69,14 @@ export default class Game extends Component {
     return (
       <div className={`Game${loading ? ' hidden' : ''}`}>
         {image && desc ? (
-          <Fragment>
+          <>
             <Canvas image={image} />
             <Description desc={desc} />
             <button type='button' disabled={loading} onClick={this.restart}>↻</button>
-          </Fragment>
+          </>
         ) : (
           optionSets && (
-            <Fragment>
+            <>
               <Materials
                 optionSets={optionSets}
                 choices={choices}
@@ -85,7 +85,7 @@ export default class Game extends Component {
               <button type='button' disabled={loading || !complete} onClick={this.forge}>
                 Forge
               </button>
-            </Fragment>
+            </>
           )
         )}
       </div>

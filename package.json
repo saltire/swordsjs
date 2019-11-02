@@ -25,7 +25,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "css-hot-loader": "^1.4.4",
     "css-loader": "^3.1.0",
-    "csv-parse": "^4.4.5",
+    "csv-parse": "^4.4.6",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "file-loader": "^4.1.0",

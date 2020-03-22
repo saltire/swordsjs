@@ -59,9 +59,10 @@ module.exports = {
       story.optionSets = await swordgen.selectRandomPaletteOptions();
     }
     if (input && input.choices) {
-      const sword = await swordgen.createSwordFromChoices(story.optionSets, input.choices);
-      story.image = await dataUrl(sword.image);
-      story.descs = sword.descs;
+      const { image, descs } = await swordgen.createSwordFromChoices(
+        story.optionSets, input.choices);
+      story.image = await dataUrl(image);
+      story.descs = descs;
     }
 
     // Make any applicable text substitutions.

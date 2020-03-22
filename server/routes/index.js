@@ -20,10 +20,10 @@ router.get('/sword.png', (req, res, next) => {
 
 router.get('/sword/data', (req, res, next) => {
   swordgen.createRandomSword()
-    .then(({ image, text }) => dataUrl(image)
+    .then(({ image, descs }) => dataUrl(image)
       .then(imageUrl => res.json({
         image: imageUrl,
-        desc: text,
+        descs,
       })))
     .catch(next);
 });

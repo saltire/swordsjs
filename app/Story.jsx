@@ -54,7 +54,7 @@ export default class Story extends Component {
     return story && (
       <div className={`Story${loading ? ' hidden' : ''}`}>
         <p>
-          {!charColour ? text : reactStringReplace(text, /["“”](.*?)["“”]/g,
+          {!charColour ? text : reactStringReplace(text, /["“](.*?)["”]/g,
             (match, i) => <span key={i} style={{ color: charColour }}>“{match}”</span>)}
         </p>
 

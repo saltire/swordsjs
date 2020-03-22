@@ -69,7 +69,7 @@ module.exports = {
 
     return {
       image: await image.drawSword(layerParts, colourSubs),
-      text: text.describeSword(layerParts, materialSubs),
+      descs: text.describeSword(layerParts, materialSubs),
     };
   },
 

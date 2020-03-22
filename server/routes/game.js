@@ -36,10 +36,10 @@ router.post('/forge', (req, res, next) => {
   }
 
   return swordgen.createSwordFromChoices(optionSets, choices)
-    .then(({ image, text }) => dataUrl(image)
+    .then(({ image, descs }) => dataUrl(image)
       .then(imageUrl => res.json({
         image: imageUrl,
-        desc: text,
+        descs,
       })))
     .catch(next);
 });

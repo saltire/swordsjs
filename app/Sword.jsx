@@ -12,7 +12,7 @@ export default class Sword extends Component {
 
     this.state = {
       image: null,
-      desc: null,
+      descs: null,
       loading: false,
     };
 
@@ -27,22 +27,21 @@ export default class Sword extends Component {
     this.setState({ loading: true });
 
     axios.get('/sword/data')
-      .then(
-        (resp) => {
-          const { image, desc } = resp.data;
-          this.setState({ image, desc });
-        },
-        console.error)
+      .then(resp => this.setState({
+        image: resp.data.image,
+        descs: resp.data.descs,
+      }))
+      .catch(console.error)
       .then(() => this.setState({ loading: false }));
   }
 
   render() {
-    const { image, desc, loading } = this.state;
+    const { image, descs, loading } = this.state;
 
     return (
       <div className='Sword'>
         <Canvas image={image} />
-        <Description desc={desc} />
+        <Description descs={descs} />
         <button type='button' disabled={loading} onClick={this.reload}>↻</button>
       </div>
     );

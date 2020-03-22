@@ -15,7 +15,7 @@ export default class Game extends Component {
       optionSets: null,
       choices: {},
       image: null,
-      desc: null,
+      descs: null,
       loading: true,
     };
 
@@ -37,7 +37,7 @@ export default class Game extends Component {
       optionSets: null,
       choices: {},
       image: null,
-      desc: null,
+      descs: null,
     });
 
     axios.get('/game/options')
@@ -52,26 +52,25 @@ export default class Game extends Component {
     this.setState({ loading: true });
     setTimeout(() => {
       axios.post('/game/forge', { choices })
-        .then(
-          resp => this.setState({
-            image: resp.data.image,
-            desc: resp.data.desc,
-          }),
-          console.error)
-        .then(() => this.setState({ loading: false }));
+        .then(resp => this.setState({
+          image: resp.data.image,
+          descs: resp.data.descs,
+        }))
+        .catch(console.error)
+        .finally(() => this.setState({ loading: false }));
     }, 750);
   }
 
   render() {
-    const { optionSets, choices, image, desc, loading } = this.state;
+    const { optionSets, choices, image, descs, loading } = this.state;
     const complete = optionSets && (Object.keys(choices).length === optionSets.length);
 
     return (
       <div className={`Game${loading ? ' hidden' : ''}`}>
-        {image && desc ? (
+        {image && descs ? (
           <>
             <Canvas image={image} />
-            <Description desc={desc} />
+            <Description descs={descs} />
             <button type='button' disabled={loading} onClick={this.restart}>↻</button>
           </>
         ) : (

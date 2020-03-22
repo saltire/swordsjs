@@ -1,9 +1,10 @@
 'use strict';
 
+const fs = require('fs').promises;
 const path = require('path');
 const sharp = require('sharp');
 
-const { pixelGetter, range, readCsv, readDir } = require('./utils');
+const { pixelGetter, range, readCsv } = require('./utils');
 
 
 const chaptersFile = path.resolve(__dirname, '../data/chapters.csv');
@@ -47,7 +48,7 @@ module.exports = {
   async getParts() {
     const [descs, files] = await Promise.all([
       this.getPartDescriptions(),
-      readDir(partsDir),
+      fs.readdir(partsDir),
     ]);
     const partsMap = {};
 

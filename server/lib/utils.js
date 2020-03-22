@@ -1,12 +1,10 @@
 'use strict';
 
 const csvParse = require('csv-parse');
-const fs = require('fs');
+const fs = require('fs').promises;
 const util = require('util');
 
 const parseCsv = util.promisify(csvParse);
-const readDir = util.promisify(fs.readdir);
-const readFile = util.promisify(fs.readFile);
 
 
 module.exports = {
@@ -39,9 +37,5 @@ module.exports = {
 
   range: length => [...Array(length).keys()],
 
-  readCsv: async filename => parseCsv(await readFile(filename)),
-
-  readDir,
-
-  readFile,
+  readCsv: async filename => parseCsv(await fs.readFile(filename)),
 };

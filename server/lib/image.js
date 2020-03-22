@@ -15,47 +15,46 @@ const options = {
 
 module.exports = {
   // Recolour a sword part with custom palettes.
-  colourPart(partPath, colourSubs) {
+  async colourPart(partPath, colourSubs) {
     const image = sharp(partPath);
 
-    return Promise.all([image.metadata(), image.raw().toBuffer()])
-      .then(([{ width, height, channels }, buffer]) => {
-        const getPixel = pixelGetter(buffer, width, channels);
-        const setPixel = pixelSetter(buffer, width, channels);
+    const [{ width, height, channels }, buffer] = await Promise.all([
+      image.metadata(),
+      image.raw().toBuffer(),
+    ]);
 
-        const colourEntries = [...colourSubs.entries()];
+    const getPixel = pixelGetter(buffer, width, channels);
+    const setPixel = pixelSetter(buffer, width, channels);
 
-        range(width).forEach((x) => {
-          range(height).forEach((y) => {
-            const srcColour = getPixel(x, y);
-            colourEntries.some(([src, dest]) => {
-              if (src.every((c, i) => (c === srcColour[i]))) {
-                setPixel(x, y, dest);
-                return true;
-              }
-              return false;
-            });
-          });
+    const colourEntries = [...colourSubs.entries()];
+
+    range(width).forEach((x) => {
+      range(height).forEach((y) => {
+        const srcColour = getPixel(x, y);
+        colourEntries.some(([src, dest]) => {
+          if (src.every((c, i) => (c === srcColour[i]))) {
+            setPixel(x, y, dest);
+            return true;
+          }
+          return false;
         });
-
-        return buffer;
       });
+    });
+
+    return buffer;
   },
 
   // Generate a composite image of a sword from of a set of parts and colour palettes.
-  drawSword(layerParts, colourSubs) {
-    let promise = sharp({ create: options }).toBuffer();
+  async drawSword(layerParts, colourSubs) {
+    const layerImgs = await Promise.all(
+      layers.map(layer => this.colourPart(layerParts[layer].path, colourSubs)));
 
-    return Promise.all(layers.map(layer => this.colourPart(layerParts[layer].path, colourSubs)))
-      .then((layerImgs) => {
-        layerImgs.forEach((layerImg) => {
-          // Chain promises in series.
-          promise = promise.then(buffer => sharp(buffer, { raw: options })
-            .composite([{ input: layerImg, raw: options }])
-            .toBuffer());
-        });
-        return promise;
-      })
-      .then(buffer => sharp(buffer, { raw: options }));
+    const buffer = await layerImgs.reduce(
+      async (buf, layerImg) => sharp(await buf, { raw: options })
+        .composite([{ input: layerImg, raw: options }])
+        .toBuffer(),
+      sharp({ create: options }).toBuffer());
+
+    return sharp(buffer, { raw: options });
   },
 };

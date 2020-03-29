@@ -1,31 +1,28 @@
 'use strict';
 
-const express = require('express');
+const { Router } = require('express');
+const { addAsync } = require('@awaitjs/express');
 
 const swordgen = require('../lib/swordgen');
 const { dataUrl } = require('../lib/utils');
 
 
-const router = module.exports = express.Router();
+const router = module.exports = addAsync(Router());
 
-router.get('/sword.png', (req, res, next) => {
-  swordgen.createRandomSword()
-    .then(({ image }) => image.png().toBuffer())
-    .then((buffer) => {
-      res.set('Content-type', 'image/png');
-      res.send(buffer);
-    })
-    .catch(next);
+router.getAsync('/sword.png', async (req, res) => {
+  const { image } = await swordgen.createRandomSword();
+  const buffer = await image.png().toBuffer();
+  res.set('Content-type', 'image/png');
+  res.send(buffer);
 });
 
-router.get('/sword/data', (req, res, next) => {
-  swordgen.createRandomSword()
-    .then(({ image, descs }) => dataUrl(image)
-      .then(imageUrl => res.json({
-        image: imageUrl,
-        descs,
-      })))
-    .catch(next);
+router.getAsync('/sword/data', async (req, res) => {
+  const { image, descs } = await swordgen.createRandomSword();
+  const imageUrl = await dataUrl(image);
+  res.json({
+    image: imageUrl,
+    descs,
+  });
 });
 
 router.use('/game', require('./game'));

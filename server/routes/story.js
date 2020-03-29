@@ -1,28 +1,23 @@
 'use strict';
 
-const express = require('express');
+const { Router } = require('express');
+const { addAsync } = require('@awaitjs/express');
 
 const { nextStage, formatStoryData } = require('../lib/story');
 
 
-const router = module.exports = express.Router();
+const router = module.exports = addAsync(Router());
 
-router.get('/state', (req, res, next) => {
-  Promise.resolve(req.session.story || nextStage())
-    .then((story) => {
-      req.session.story = story;
-      res.json({ story: formatStoryData(req.session.story) });
-    })
-    .catch(next);
+router.getAsync('/state', async (req, res) => {
+  const story = req.session.story || await nextStage();
+  req.session.story = story;
+  res.json({ story: formatStoryData(req.session.story) });
 });
 
-router.post('/continue', (req, res, next) => {
-  nextStage(req.session.story, req.body)
-    .then((story) => {
-      req.session.story = story;
-      res.json({ story: formatStoryData(req.session.story) });
-    })
-    .catch(next);
+router.postAsync('/continue', async (req, res) => {
+  const story = await nextStage(req.session.story, req.body);
+  req.session.story = story;
+  res.json({ story: formatStoryData(req.session.story) });
 });
 
 router.get('/start', (req, res) => {

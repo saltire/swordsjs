@@ -7,13 +7,14 @@ const sharp = require('sharp');
 const { pixelGetter, range, readCsv } = require('./utils');
 
 
-const chaptersFile = path.resolve(__dirname, '../data/chapters.csv');
-const charactersFile = path.resolve(__dirname, '../data/characters.csv');
-const partNamesFile = path.resolve(__dirname, '../data/parts.csv');
-const partsDir = path.resolve(__dirname, '../data/parts');
-const paletteImage = path.resolve(__dirname, '../data/palette8.png');
-const paletteNamesFile = path.resolve(__dirname, '../data/palettes.csv');
-const weatherFile = path.resolve(__dirname, '../data/weather.csv');
+const dataDir = path.resolve(__dirname, '../../data');
+const chaptersFile = path.resolve(dataDir, 'chapters.csv');
+const charactersFile = path.resolve(dataDir, 'characters.csv');
+const partNamesFile = path.resolve(dataDir, 'parts.csv');
+const partsDir = path.resolve(dataDir, 'parts');
+const paletteImage = path.resolve(dataDir, 'palette8.png');
+const paletteNamesFile = path.resolve(dataDir, 'palettes.csv');
+const weatherFile = path.resolve(dataDir, 'weather.csv');
 
 const layers = [
   'grip',

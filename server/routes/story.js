@@ -1,12 +1,11 @@
 'use strict';
 
-const { Router } = require('express');
-const { addAsync } = require('@awaitjs/express');
+const { Router } = require('@awaitjs/express');
 
 const { nextStage, formatStoryData } = require('../lib/story');
 
 
-const router = module.exports = addAsync(Router());
+const router = module.exports = Router();
 
 router.getAsync('/state', async (req, res) => {
   const story = req.session.story || await nextStage();

@@ -1,13 +1,12 @@
 'use strict';
 
-const { Router } = require('express');
-const { addAsync } = require('@awaitjs/express');
+const { Router } = require('@awaitjs/express');
 
 const swordgen = require('../lib/swordgen');
 const { dataUrl } = require('../lib/utils');
 
 
-const router = module.exports = addAsync(Router());
+const router = module.exports = Router();
 
 router.getAsync('/options', async (req, res) => {
   const optionSets = await swordgen.selectRandomPaletteOptions();

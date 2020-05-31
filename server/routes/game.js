@@ -13,7 +13,7 @@ router.getAsync('/options', async (req, res) => {
   req.session.optionSets = optionSets;
   res.json({
     optionSets: optionSets
-      .map(({ palettes }) => Object.values(palettes)
+      .map(({ palettes }) => palettes
         .map(({ materials }) => Object.values(materials)
           .map(mat => mat.replace('*', ''))
           .join(' and '))),

@@ -7,8 +7,8 @@ const { random, range } = require('./utils');
 
 
 // Fetch data in advance.
-const dataPromise = Promise.all(
-  [
+const dataPromise = Promise
+  .all([
     data.getPaletteSets(),
     data.getParts(),
   ])
@@ -27,7 +27,7 @@ module.exports = {
     const colourSubs = new Map();
     const materialSubs = new Map();
     paletteSets.forEach(({ srcColours, palettes }) => {
-      const { colours, materials } = random(Object.values(palettes));
+      const { colours, materials } = random(palettes);
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
       Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
     });
@@ -38,23 +38,23 @@ module.exports = {
   async selectRandomPaletteOptions(count = 2) {
     const { paletteSets } = await dataPromise;
 
+    // There are two palette sets: gold and silver. Pick [count] palette options from each.
     return paletteSets.map(({ srcColours, palettes }) => {
-      const names = Object.keys(palettes);
-      const paletteOptions = {};
-      range(count).forEach(() => {
-        const [name] = names.splice(Math.floor(Math.random() * names.length), 1);
-        paletteOptions[name] = palettes[name];
-      });
-
-      return { srcColours, palettes: paletteOptions };
+      const palettesCopy = [...palettes];
+      return {
+        srcColours,
+        palettes: range(count)
+          .map(() => palettesCopy.splice(Math.floor(Math.random() * palettesCopy.length), 1))
+          .flat(),
+      };
     });
   },
 
-  getPaletteSubsFromChoices(paletteSets, choices) {
+  getPaletteSubsFromChoices(optionSets, choices) {
     const colourSubs = new Map();
     const materialSubs = new Map();
-    paletteSets.forEach(({ srcColours, palettes }, p) => {
-      const { colours, materials } = Object.values(palettes)[choices[p]];
+    optionSets.forEach(({ srcColours, palettes }, p) => {
+      const { colours, materials } = palettes[choices[p]];
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
       Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
     });
@@ -73,9 +73,9 @@ module.exports = {
     };
   },
 
-  async createSwordFromChoices(paletteSets, choices) {
+  async createSwordFromChoices(optionSets, choices) {
     const layerParts = await this.selectRandomParts();
-    const { colourSubs, materialSubs } = this.getPaletteSubsFromChoices(paletteSets, choices);
+    const { colourSubs, materialSubs } = this.getPaletteSubsFromChoices(optionSets, choices);
 
     return {
       image: await image.drawSword(layerParts, colourSubs),

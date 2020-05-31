@@ -110,7 +110,7 @@ module.exports = {
         colours = colourSets[paletteSets.length];
         paletteSets.push({
           srcColours: colours[0],
-          palettes: {},
+          palettes: [],
         });
       }
 
@@ -118,10 +118,11 @@ module.exports = {
       // Get the internal name of the palette and its name for each material.
       else if (name) {
         const paletteSet = paletteSets[paletteSets.length - 1];
-        paletteSet.palettes[name] = {
+        paletteSet.palettes.push({
+          name,
           materials: materials.reduce((pms, mat, i) => ({ ...pms, [mat]: entries[i] }), {}),
-          colours: colours[Object.keys(paletteSet.palettes).length],
-        };
+          colours: colours[paletteSet.palettes.length],
+        });
       }
     });
 

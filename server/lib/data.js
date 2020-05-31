@@ -98,15 +98,15 @@ module.exports = {
     ]);
 
     const paletteSets = [];
-    let materials = [];
+    let materialTypes = [];
     let colours = [];
 
     rows.forEach(([setname, name, ...entries]) => {
       // If there's an entry in the first column, it's a header for a palette set.
       // Get the corresponding set of colour palettes,
-      // and the names of the materials starting from the third column.
+      // and the names of the material types starting from the third column.
       if (setname) {
-        materials = entries.filter(Boolean);
+        materialTypes = entries.filter(Boolean);
         colours = colourSets[paletteSets.length];
         paletteSets.push({
           srcColours: colours[0],
@@ -115,12 +115,12 @@ module.exports = {
       }
 
       // If there's an entry in the second column, it's a palette.
-      // Get the internal name of the palette and its name for each material.
+      // Get the internal name of the palette and the name for its material of each type.
       else if (name) {
         const paletteSet = paletteSets[paletteSets.length - 1];
         paletteSet.palettes.push({
           name,
-          materials: materials.reduce((pms, mat, i) => ({ ...pms, [mat]: entries[i] }), {}),
+          materials: materialTypes.map((type, i) => ({ type, name: entries[i] })),
           colours: colours[paletteSet.palettes.length],
         });
       }

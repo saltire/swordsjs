@@ -29,7 +29,7 @@ module.exports = {
     paletteSets.forEach(({ srcColours, palettes }) => {
       const { colours, materials } = random(palettes);
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
+      materials.forEach(({ type, name }) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };
@@ -56,7 +56,7 @@ module.exports = {
     optionSets.forEach(({ srcColours, palettes }, p) => {
       const { colours, materials } = palettes[choices[p]];
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      Object.entries(materials).forEach(([src, dest]) => materialSubs.set(src, dest));
+      materials.forEach(({ type, name }) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };

@@ -98,8 +98,8 @@ module.exports = {
       charColour: story.character && story.character.colour,
       optionSets: story.optionSets && !story.descs && story.optionSets
         .map(({ palettes }) => Object.values(palettes)
-          .map(({ materials }) => Array.from(new Set(Object.values(materials)
-            .map(mat => mat.replace('*', ''))))
+          .map(({ materials }) => Array.from(new Set(materials
+            .map(({ name }) => name.replace('*', ''))))
             .join(' and '))),
       image: story.tags.includes('image') ? story.image : undefined,
       desc: story.desc,

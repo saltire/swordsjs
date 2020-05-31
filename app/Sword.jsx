@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import './Sword.scss';
@@ -6,44 +6,32 @@ import Canvas from './Canvas';
 import Description from './Description';
 
 
-export default class Sword extends Component {
-  constructor(props) {
-    super(props);
+export default function Sword() {
+  const [image, setImage] = useState(null);
+  const [descs, setDescs] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    this.state = {
-      image: null,
-      descs: null,
-      loading: false,
-    };
-
-    this.reload = this.reload.bind(this);
-  }
-
-  componentDidMount() {
-    this.reload();
-  }
-
-  reload() {
-    this.setState({ loading: true });
+  function reload() {
+    setLoading(true);
 
     axios.get('/sword/data')
-      .then(resp => this.setState({
-        image: resp.data.image,
-        descs: resp.data.descs,
-      }))
+      .then(({ data }) => {
+        setImage(data.image);
+        setDescs(data.descs);
+      })
       .catch(console.error)
-      .then(() => this.setState({ loading: false }));
+      .finally(() => setLoading(false));
   }
 
-  render() {
-    const { image, descs, loading } = this.state;
+  useEffect(() => {
+    reload();
+  }, []);
 
-    return (
-      <div className='Sword'>
-        <Canvas className='sword' image={image} />
-        <Description descs={descs} />
-        <button type='button' disabled={loading} onClick={this.reload}>↻</button>
-      </div>
-    );
-  }
+  return (
+    <div className='Sword'>
+      <Canvas className='sword' image={image} />
+      <Description descs={descs} />
+      <button type='button' disabled={loading} onClick={reload}>↻</button>
+    </div>
+  );
 }

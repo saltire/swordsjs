@@ -1,46 +1,26 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 
-export default class Canvas extends Component {
-  constructor(props) {
-    super(props);
+export default function Canvas({ image, className, onClick }) {
+  const canvas = useRef();
 
-    this.canvas = React.createRef();
-  }
-
-  componentDidMount() {
-    this.draw();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { image } = this.props;
-    if (image !== prevProps.image) {
-      this.draw();
-    }
-  }
-
-  draw() {
-    const { image } = this.props;
-    if (image) {
-      const canvas = this.canvas.current;
-      const ctx = canvas.getContext('2d');
+  useEffect(() => {
+    if (image && canvas.current) {
+      const ctx = canvas.current.getContext('2d');
 
       const img = new Image();
       img.onload = () => {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+        canvas.current.width = canvas.current.clientWidth;
+        canvas.current.height = canvas.current.clientHeight;
 
-        ctx.scale(canvas.width / img.width, canvas.height / img.height);
+        ctx.scale(canvas.current.width / img.width, canvas.current.height / img.height);
         ctx.imageSmoothingEnabled = false;
 
         ctx.drawImage(img, 0, 0);
       };
       img.src = image;
     }
-  }
+  }, image);
 
-  render() {
-    const { className, onClick } = this.props;
-    return <canvas className={`Canvas ${className || ''}`} ref={this.canvas} onClick={onClick} />;
-  }
+  return <canvas className={`Canvas ${className || ''}`} ref={canvas} onClick={onClick} />;
 }

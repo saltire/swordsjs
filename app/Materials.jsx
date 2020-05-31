@@ -2,13 +2,12 @@ import React from 'react';
 
 
 export default function Materials({ optionSets, choices, onUpdate }) {
-  /* eslint-disable react/no-array-index-key */
   return (
     <form className='Materials'>
       {(optionSets || []).map((optionSet, i) => (
-        <p key={i}>
-          {(optionSet || []).map((option, j) => (
-            <label key={j}>
+        <p key={i.toString()}>
+          {(optionSet || []).map(({ gemImage, materials }, j) => (
+            <label key={j.toString()}>
               <span className='input'>
                 <input
                   type='radio'
@@ -16,7 +15,8 @@ export default function Materials({ optionSets, choices, onUpdate }) {
                   onChange={e => (e.target.checked && onUpdate({ ...choices, [i]: j }))}
                 />
               </span>
-              {option}
+              <img src={gemImage} alt={materials} />
+              {materials}
             </label>
           ))}
         </p>

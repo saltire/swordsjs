@@ -4,15 +4,19 @@ const fs = require('fs').promises;
 const path = require('path');
 const sharp = require('sharp');
 
-const { pixelGetter, range, readCsv } = require('./utils');
+const image = require('./image');
+const { dataUrl, pixelGetter, range, readCsv } = require('./utils');
 
 
 const dataDir = path.resolve(__dirname, '../../data');
+const partsDir = path.resolve(dataDir, 'parts');
+
+const gemImage = path.resolve(dataDir, 'gem.png');
+const paletteImage = path.resolve(dataDir, 'palette8.png');
+
 const chaptersFile = path.resolve(dataDir, 'chapters.csv');
 const charactersFile = path.resolve(dataDir, 'characters.csv');
 const partNamesFile = path.resolve(dataDir, 'parts.csv');
-const partsDir = path.resolve(dataDir, 'parts');
-const paletteImage = path.resolve(dataDir, 'palette8.png');
 const paletteNamesFile = path.resolve(dataDir, 'palettes.csv');
 const weatherFile = path.resolve(dataDir, 'weather.csv');
 
@@ -74,11 +78,11 @@ module.exports = {
   // Get a list of lists of RGBA colour palettes from an image file.
   async getColourSets() {
     const ph = 8;
-    const image = sharp(paletteImage);
+    const img = sharp(paletteImage);
 
     const [{ width, height, channels }, buffer] = await Promise.all([
-      image.metadata(),
-      image.raw().toBuffer(),
+      img.metadata(),
+      img.raw().toBuffer(),
     ]);
 
     const getPixel = pixelGetter(buffer, width, channels);
@@ -101,7 +105,9 @@ module.exports = {
     let materialTypes = [];
     let colours = [];
 
-    rows.forEach(([setname, name, ...entries]) => {
+    await rows.reduce(async (lastRow, [setname, name, ...entries]) => {
+      await lastRow;
+
       // If there's an entry in the first column, it's a header for a palette set.
       // Get the corresponding set of colour palettes,
       // and the names of the material types starting from the third column.
@@ -118,13 +124,18 @@ module.exports = {
       // Get the internal name of the palette and the name for its material of each type.
       else if (name) {
         const paletteSet = paletteSets[paletteSets.length - 1];
+        const paletteColours = colours[paletteSet.palettes.length];
+        const colourSubs = new Map(paletteSets[0].srcColours.map(
+          (src, i) => [src, paletteColours[i]]));
         paletteSet.palettes.push({
           name,
           materials: materialTypes.map((type, i) => ({ type, name: entries[i] })),
-          colours: colours[paletteSet.palettes.length],
+          colours: paletteColours,
+          gemImage: await dataUrl(await image.imageFromBuffer(
+            await image.colourPart(gemImage, colourSubs), 10)),
         });
       }
-    });
+    }, Promise.resolve());
 
     return paletteSets;
   },

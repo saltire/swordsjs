@@ -13,6 +13,16 @@ const options = {
 };
 
 module.exports = {
+  async imageFromBuffer(buffer, width) {
+    return sharp(buffer, {
+      raw: {
+        ...options,
+        width,
+        height: buffer.length / width / options.channels,
+      },
+    });
+  },
+
   // Recolour a sword part with custom palettes.
   async colourPart(partPath, colourSubs) {
     const image = sharp(partPath);

@@ -42,7 +42,7 @@ module.exports = {
       const names = Object.keys(palettes);
       const paletteOptions = {};
       range(count).forEach(() => {
-        const name = names.splice(Math.floor(Math.random() * names.length), 1);
+        const [name] = names.splice(Math.floor(Math.random() * names.length), 1);
         paletteOptions[name] = palettes[name];
       });
 

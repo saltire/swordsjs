@@ -4,9 +4,9 @@ const swordgen = require('./lib/swordgen');
 
 
 async function main() {
-  const { image, text } = await swordgen.createRandomSword();
+  const { image, descs } = await swordgen.createRandomSword();
   image.toFile('sword.png');
-  console.log({ text });
+  console.log({ descs });
 }
 
 main();

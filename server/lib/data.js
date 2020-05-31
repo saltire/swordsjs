@@ -106,7 +106,7 @@ module.exports = {
       // Get the corresponding set of colour palettes,
       // and the names of the materials starting from the third column.
       if (setname) {
-        materials = entries.filter(e => e);
+        materials = entries.filter(Boolean);
         colours = colourSets[paletteSets.length];
         paletteSets.push({
           srcColours: colours[0],
@@ -132,8 +132,8 @@ module.exports = {
     const [adjectives, nouns] = await readCsv(charactersFile);
 
     return {
-      adjectives: adjectives.filter(a => a),
-      nouns: nouns.filter(n => n),
+      adjectives: adjectives.filter(Boolean),
+      nouns: nouns.filter(Boolean),
     };
   },
 

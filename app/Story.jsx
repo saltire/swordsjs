@@ -66,7 +66,7 @@ export default class Story extends Component {
           />
         )}
 
-        {image && <Canvas image={image} />}
+        {image && <Canvas className='sword' image={image} />}
 
         <button type='button' disabled={loading || !complete} onClick={this.continue}>
           {end ? 'Start again' : 'Continue'}

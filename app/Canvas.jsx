@@ -29,7 +29,8 @@ export default class Canvas extends Component {
       img.onload = () => {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-        ctx.scale(canvas.width / 360, canvas.height / 120);
+
+        ctx.scale(canvas.width / img.width, canvas.height / img.height);
         ctx.imageSmoothingEnabled = false;
 
         ctx.drawImage(img, 0, 0);
@@ -39,6 +40,7 @@ export default class Canvas extends Component {
   }
 
   render() {
-    return <canvas className='Canvas' ref={this.canvas} />;
+    const { className, onClick } = this.props;
+    return <canvas className={`Canvas ${className || ''}`} ref={this.canvas} onClick={onClick} />;
   }
 }

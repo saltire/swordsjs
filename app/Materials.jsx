@@ -1,5 +1,9 @@
 import React from 'react';
 
+import './Materials.scss';
+import Canvas from './Canvas';
+import gemOutline from './static/gem-outline.png';
+
 
 export default function Materials({ optionSets, choices, onUpdate }) {
   return (
@@ -7,15 +11,17 @@ export default function Materials({ optionSets, choices, onUpdate }) {
       {(optionSets || []).map((optionSet, i) => (
         <p key={i.toString()}>
           {(optionSet || []).map(({ gemImage, materials }, j) => (
-            <label key={j.toString()}>
-              <span className='input'>
-                <input
-                  type='radio'
-                  checked={choices[i] === j}
-                  onChange={e => (e.target.checked && onUpdate({ ...choices, [i]: j }))}
-                />
-              </span>
-              <img src={gemImage} alt={materials} />
+            <label
+              key={j.toString()}
+              role='button'
+              tabIndex='0'
+              onKeyUp={e => ['Enter', ' '].includes(e.key) && onUpdate({ ...choices, [i]: j })}
+              onClick={() => onUpdate({ ...choices, [i]: j })}
+            >
+              <Canvas
+                className='gem'
+                image={choices[i] === j ? gemImage : gemOutline}
+              />
               {materials}
             </label>
           ))}

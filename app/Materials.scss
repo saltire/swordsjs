@@ -1,0 +1,20 @@
+.Materials {
+  label {
+    display: block;
+    padding: 0 .5rem;
+    line-height: 26px;
+    cursor: pointer;
+
+    &:focus {
+      outline: 1px dotted #666;
+    }
+
+    .gem {
+      width: 20px;
+      height: 20px;
+      margin-top: 3px;
+      margin-right: .75rem;
+      vertical-align: top;
+    }
+  }
+}

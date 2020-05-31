@@ -40,7 +40,7 @@ export default class Sword extends Component {
 
     return (
       <div className='Sword'>
-        <Canvas image={image} />
+        <Canvas className='sword' image={image} />
         <Description descs={descs} />
         <button type='button' disabled={loading} onClick={this.reload}>↻</button>
       </div>

@@ -69,7 +69,7 @@ export default class Game extends Component {
       <div className={`Game${loading ? ' hidden' : ''}`}>
         {image && descs ? (
           <>
-            <Canvas image={image} />
+            <Canvas className='sword' image={image} />
             <Description descs={descs} />
             <button type='button' disabled={loading} onClick={this.restart}>↻</button>
           </>

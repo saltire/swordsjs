@@ -27,7 +27,7 @@ body {
   margin: 0 1.5rem;
 }
 
-canvas {
+.sword {
   width: $width;
   height: $height;
   margin-bottom: 2rem;
@@ -38,21 +38,21 @@ canvas {
     width: $width * 2;
   }
 
-  canvas {
+  .sword {
     width: $width * 2;
     height: $height * 2;
   }
 }
 
 @media only screen and (min-width: $width * 3) {
-  canvas {
+  .sword {
     width: $width * 3;
     height: $height * 3;
   }
 }
 
 @media only screen and (min-width: $width * 4) {
-  canvas {
+  .sword {
     width: $width * 4;
     height: $height * 4;
   }
@@ -65,17 +65,6 @@ p {
     color: #ccc;
     font-weight: normal;
   }
-
-    label {
-      display: block;
-      padding-left: 1.5rem;
-
-      .input {
-        display: inline-block;
-        width: 1.5rem;
-        margin-left: -1.5rem;
-      }
-    }
 }
 
 button {

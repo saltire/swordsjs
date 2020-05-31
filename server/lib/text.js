@@ -16,11 +16,8 @@ module.exports = {
 
   // Generate text descriptions of the different parts of a sword.
   describeSword(layerParts, materialSubs) {
-    const layerDescs = {};
-    Object.entries(layerParts).forEach(([layer, layerPart]) => {
-      layerDescs[layer] = this.describePart(layerPart.desc, materialSubs);
-    });
-    return layerDescs;
+    return Object.fromEntries(
+      layerParts.map(({ layer, desc }) => [layer, this.describePart(desc, materialSubs)]));
   },
 
   hePronouns: {

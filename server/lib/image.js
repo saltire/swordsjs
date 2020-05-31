@@ -2,7 +2,6 @@
 
 const sharp = require('sharp');
 
-const { layers } = require('./data');
 const { pixelGetter, pixelSetter, range } = require('./utils');
 
 
@@ -47,7 +46,7 @@ module.exports = {
   // Generate a composite image of a sword from of a set of parts and colour palettes.
   async drawSword(layerParts, colourSubs) {
     const layerImgs = await Promise.all(
-      layers.map(layer => this.colourPart(layerParts[layer].path, colourSubs)));
+      layerParts.map(({ path }) => this.colourPart(path, colourSubs)));
 
     const buffer = await layerImgs.reduce(
       async (buf, layerImg) => sharp(await buf, { raw: options })

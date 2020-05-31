@@ -18,7 +18,7 @@ module.exports = {
   async selectRandomParts() {
     const { parts } = await dataPromise;
 
-    return data.layers.reduce((lps, layer) => ({ ...lps, [layer]: random(parts[layer]) }), {});
+    return data.layers.map(layer => ({ layer, ...random(parts[layer]) }));
   },
 
   async selectRandomPaletteSubs() {

@@ -1,9 +1,9 @@
 'use strict';
 
-const data = require('./data');
-const swordgen = require('./swordgen');
-const text = require('./text');
-const { aToAn, caseSub, conjugate, dataUrl, random } = require('./utils');
+import data from './data';
+import swordgen from './swordgen';
+import text from './text';
+import { aToAn, caseSub, conjugate, dataUrl, random } from './utils';
 
 
 // Fetch data in advance.
@@ -18,8 +18,8 @@ const colours = [
   '#df3e23', '#fa6a0a', '#f9a31b', '#fffc40', '#59c135', '#249fde', '#20d6c7', '#f5a097',
   '#e86a73', '#bc4a9b', '#bb7547', '#dba463', '#ba756a', '#849be4', '#5daf8d', '#a08662'];
 
-module.exports = {
-  async nextStage(currentStory, input) {
+export default {
+  async nextStage(currentStory?, input?) {
     const [charData, chapters, weather] = await dataPromise;
 
     // Copy the ongoing story object, if it exists and isn't finished.

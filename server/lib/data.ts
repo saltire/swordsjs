@@ -1,11 +1,11 @@
 'use strict';
 
-const fs = require('fs').promises;
-const path = require('path');
-const sharp = require('sharp');
+import { promises as fs } from 'fs';
+import path from 'path';
+import sharp from 'sharp';
 
-const image = require('./image');
-const { dataUrl, pixelGetter, range, readCsv } = require('./utils');
+import image from './image';
+import { dataUrl, pixelGetter, range, readCsv } from './utils';
 
 
 const dataDir = path.resolve(__dirname, '../../data');
@@ -20,16 +20,14 @@ const partNamesFile = path.resolve(dataDir, 'parts.csv');
 const paletteNamesFile = path.resolve(dataDir, 'palettes.csv');
 const weatherFile = path.resolve(dataDir, 'weather.csv');
 
-const layers = [
+export const layers = [
   'grip',
   'blade',
   'bladedeco',
   'crossguard',
 ];
 
-module.exports = {
-  layers,
-
+export default {
   // Get a list of descriptions for each part on each layer.
   async getPartDescriptions() {
     const rows = await readCsv(partNamesFile);

@@ -1,8 +1,8 @@
 'use strict';
 
-const sharp = require('sharp');
+import sharp from 'sharp';
 
-const { pixelGetter, pixelSetter, range } = require('./utils');
+import { pixelGetter, pixelSetter, range } from './utils';
 
 
 const options = {
@@ -12,7 +12,7 @@ const options = {
   background: { r: 0, g: 0, b: 0, alpha: 0 },
 };
 
-module.exports = {
+export default {
   async imageFromBuffer(buffer, width) {
     return sharp(buffer, {
       raw: {
@@ -20,7 +20,7 @@ module.exports = {
         width,
         height: buffer.length / width / options.channels,
       },
-    });
+    } as sharp.SharpOptions);
   },
 
   // Recolour a sword part with custom palettes.
@@ -55,15 +55,15 @@ module.exports = {
 
   // Generate a composite image of a sword from of a set of parts and colour palettes.
   async drawSword(layerParts, colourSubs) {
-    const layerImgs = await Promise.all(
+    const layerImgs: Buffer[] = await Promise.all(
       layerParts.map(({ path }) => this.colourPart(path, colourSubs)));
 
     const buffer = await layerImgs.reduce(
-      async (buf, layerImg) => sharp(await buf, { raw: options })
-        .composite([{ input: layerImg, raw: options }])
+      async (buf, layerImg) => sharp(await buf, { raw: options } as sharp.SharpOptions)
+        .composite([{ input: layerImg, raw: options } as sharp.SharpOptions])
         .toBuffer(),
-      sharp({ create: options }).toBuffer());
+      sharp({ create: options } as sharp.SharpOptions).toBuffer());
 
-    return sharp(buffer, { raw: options });
+    return sharp(buffer, { raw: options } as sharp.SharpOptions);
   },
 };

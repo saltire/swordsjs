@@ -1,9 +1,9 @@
 'use strict';
 
-const { aToAn } = require('./utils');
+import { aToAn } from './utils';
 
 
-module.exports = {
+export default {
   // Fill in material keywords in a part description with materials from custom palettes.
   describePart(partDesc, materialSubs) {
     let desc = partDesc;

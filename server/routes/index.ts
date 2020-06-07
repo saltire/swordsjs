@@ -1,12 +1,13 @@
 'use strict';
 
-const { Router } = require('@awaitjs/express');
+import { Router } from '@awaitjs/express';
 
-const swordgen = require('../lib/swordgen');
-const { dataUrl } = require('../lib/utils');
+import swordgen from '../lib/swordgen';
+import { dataUrl } from '../lib/utils';
 
 
-const router = module.exports = Router();
+const router = Router();
+export default router;
 
 router.getAsync('/sword.png', async (req, res) => {
   const { image } = await swordgen.createRandomSword();

@@ -1,12 +1,12 @@
 'use strict';
 
-const bodyParser = require('body-parser');
-const express = require('express');
-const memorystore = require('memorystore');
-const morgan = require('morgan');
-const session = require('express-session');
+import bodyParser from 'body-parser';
+import express from 'express';
+import memorystore from 'memorystore';
+import morgan from 'morgan';
+import session from 'express-session';
 
-const routes = require('./routes');
+import routes from './routes';
 
 
 const app = express();

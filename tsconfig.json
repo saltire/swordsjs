@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "lib": ["ES2019"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./built",
+    "strictNullChecks": true,
+    "target": "es6"
+  },
+  "include": ["server/**/*"]
+}

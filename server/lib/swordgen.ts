@@ -1,9 +1,9 @@
 'use strict';
 
-const data = require('./data');
-const image = require('./image');
-const text = require('./text');
-const { random, range } = require('./utils');
+import data, { layers } from './data';
+import image from './image';
+import text from './text';
+import { random, range } from './utils';
 
 
 // Fetch data in advance.
@@ -14,11 +14,11 @@ const dataPromise = Promise
   ])
   .then(([paletteSets, parts]) => ({ paletteSets, parts }));
 
-module.exports = {
+export default {
   async selectRandomParts() {
     const { parts } = await dataPromise;
 
-    return data.layers.map(layer => ({ layer, ...random(parts[layer]) }));
+    return layers.map(layer => ({ layer, ...random(parts[layer]) }));
   },
 
   async selectRandomPaletteSubs() {

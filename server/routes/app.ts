@@ -1,16 +1,17 @@
 'use strict';
 
-const express = require('express');
-const history = require('connect-history-api-fallback');
-const path = require('path');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
+import express from 'express';
+import history from 'connect-history-api-fallback';
+import path from 'path';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
-const webpackConfig = require('../../webpack.dev.js');
+import webpackConfig from '../../webpack.dev.js';
 
 
-const router = module.exports = express.Router();
+const router = express.Router();
+export default router;
 
 const { publicPath } = webpackConfig.output;
 

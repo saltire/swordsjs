@@ -85,7 +85,7 @@ export default {
 
     const getPixel = pixelGetter(buffer, width, channels);
 
-    return range(Math.floor(height / ph)) // each palette set
+    return range(Math.floor((height || 0) / ph)) // each palette set
       .map(p => (p * (ph + 1))) // the top of each palette set
       .map(py => range(width) // each palette in the set
         .filter(px => (getPixel(px, py)[3] > 0)) // non-transparent pixels
@@ -99,8 +99,8 @@ export default {
       readCsv(paletteNamesFile),
     ]);
 
-    const paletteSets = [];
-    let materialTypes = [];
+    const paletteSets: any[] = [];
+    let materialTypes: string[] = [];
     let colours = [];
 
     await rows.reduce(async (lastRow, [setname, name, ...entries]) => {

@@ -22,7 +22,7 @@ export const conjugate = (text, usePlural) => text.replace(/(\w+)\|(\w+)/g,
 export const dataUrl = async image => (
   `data:image/png;base64,${(await image.png().toBuffer()).toString('base64')}`);
 
-export const pixelGetter = (buffer, width, channels) => (x, y) => {
+export const pixelGetter = (buffer: Buffer, width, channels) => (x, y) => {
   const offset = (y * width + x) * channels;
   return Array.from(buffer.slice(offset, offset + channels));
 };

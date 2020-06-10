@@ -2,6 +2,9 @@
 
 import { Router } from '@awaitjs/express';
 
+import app from './app';
+import game from './game';
+import story from './story';
 import swordgen from '../lib/swordgen';
 import { dataUrl } from '../lib/utils';
 
@@ -25,6 +28,6 @@ router.getAsync('/sword/data', async (req, res) => {
   });
 });
 
-router.use('/game', require('./game'));
-router.use('/story', require('./story'));
-router.use(require('./app'));
+router.use('/game', game);
+router.use('/story', story);
+router.use('/', app);

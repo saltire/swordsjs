@@ -10,6 +10,9 @@ const router = Router();
 export default router;
 
 router.getAsync('/options', async (req, res) => {
+  if (!req.session) {
+    throw new Error('Session not found.');
+  }
   const optionSets = await swordgen.selectRandomPaletteOptions();
   req.session.optionSets = optionSets;
   res.json({
@@ -26,10 +29,10 @@ router.getAsync('/options', async (req, res) => {
 });
 
 router.postAsync('/forge', async (req, res) => {
-  const { optionSets } = req.session;
-  if (!optionSets) {
+  if (!(req.session && req.session.optionSets)) {
     throw new Error('Session not found.');
   }
+  const optionSets = req.session.optionSets;
   delete req.session.optionSets;
 
   const { choices } = req.body;

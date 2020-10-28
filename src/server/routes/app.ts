@@ -20,7 +20,7 @@ router.use(publicPath, history({ index: '/' }));
 
 if (process.env.NODE_ENV === 'production') {
   // Serve already-compiled webpack content from the dist folder.
-  router.use(publicPath, express.static(path.resolve(__dirname, '../../dist')));
+  router.use(publicPath, express.static(path.resolve(__dirname, '../../app')));
 }
 else {
   const compiler = webpack(webpackConfig);

@@ -8,13 +8,13 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    index: './app/index.jsx',
+    index: path.resolve(__dirname, 'app/index.jsx'),
   },
   output: {
     filename: '[name].[hash].js',
     chunkFilename: '[name].[chunkhash].js',
     hashDigestLength: 8,
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../built/app'),
     publicPath: '/',
   },
   module: {
@@ -46,8 +46,8 @@ module.exports = {
   },
   plugins: [
     new HtmlPlugin({
-      template: './app/index.ejs',
-      favicon: './app/static/favicon.ico',
+      template: path.resolve(__dirname, 'app/index.ejs'),
+      favicon: path.resolve(__dirname, 'app/static/favicon.ico'),
     }),
   ],
 };

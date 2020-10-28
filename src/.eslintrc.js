@@ -1,8 +1,5 @@
 module.exports = {
   extends: 'airbnb',
-  parserOptions: {
-    sourceType: 'script',
-  },
   rules: {
     'arrow-parens': [2, 'as-needed', { requireForBlockBody: true }],
     'brace-style': [2, 'stroustrup'],

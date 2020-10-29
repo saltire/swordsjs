@@ -27,9 +27,9 @@ export default {
     const colourSubs = new Map();
     const materialSubs = new Map();
     paletteSets.forEach(({ srcColours, palettes }) => {
-      const { colours, materials } = random(palettes);
+      const { colours, materialNames } = random(palettes);
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      materials.forEach(({ type, name }) => materialSubs.set(type, name));
+      materialNames.forEach(({ type, name }) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };
@@ -54,9 +54,9 @@ export default {
     const colourSubs = new Map();
     const materialSubs = new Map();
     optionSets.forEach(({ srcColours, palettes }, p) => {
-      const { colours, materials } = palettes[choices[p]];
+      const { colours, materialNames } = palettes[choices[p]];
       srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      materials.forEach(({ type, name }) => materialSubs.set(type, name));
+      materialNames.forEach(({ type, name }) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };

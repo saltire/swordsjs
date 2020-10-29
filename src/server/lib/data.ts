@@ -101,7 +101,7 @@ export default {
 
     const paletteSets: any[] = [];
     let materialTypes: string[] = [];
-    let colours = [];
+    let colourSet = [];
 
     await rows.reduce(async (lastRow, [setname, name, ...entries]) => {
       await lastRow;
@@ -111,9 +111,9 @@ export default {
       // and the names of the material types starting from the third column.
       if (setname) {
         materialTypes = entries.filter(Boolean);
-        colours = colourSets[paletteSets.length];
+        colourSet = colourSets[paletteSets.length];
         paletteSets.push({
-          srcColours: colours[0],
+          srcColours: colourSet[0],
           palettes: [],
         });
       }
@@ -122,12 +122,12 @@ export default {
       // Get the internal name of the palette and the name for its material of each type.
       else if (name) {
         const paletteSet = paletteSets[paletteSets.length - 1];
-        const paletteColours = colours[paletteSet.palettes.length];
+        const paletteColours = colourSet[paletteSet.palettes.length];
         const colourSubs = new Map(paletteSets[0].srcColours.map(
           (src, i) => [src, paletteColours[i]]));
         paletteSet.palettes.push({
           name,
-          materials: materialTypes.map((type, i) => ({ type, name: entries[i] })),
+          materialNames: materialTypes.map((type, i) => ({ type, name: entries[i] })),
           colours: paletteColours,
           gemImage: await dataUrl(await image.imageFromBuffer(
             await image.colourPart(gemImage, colourSubs), 10)),

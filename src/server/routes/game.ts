@@ -18,10 +18,10 @@ router.getAsync('/options', async (req, res) => {
   res.json({
     optionSets: optionSets
       .map(({ palettes }) => Object.values(palettes)
-        .map(({ gemImage, materials }) => ({
+        .map(({ gemImage, materialNames }) => ({
           gemImage,
-          materials: Array
-            .from(new Set(materials
+          materialNames: Array
+            .from(new Set(materialNames
               .map(({ name }) => name.replace('*', ''))))
             .join(' and '),
         }))),

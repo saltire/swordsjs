@@ -1,13 +1,9 @@
 .Materials {
-  label {
+  button {
     display: block;
     padding: 0 .5rem;
+    background: none;
     line-height: 26px;
-    cursor: pointer;
-
-    &:focus {
-      outline: 1px dotted #666;
-    }
 
     .gem {
       width: 20px;

@@ -11,11 +11,9 @@ export default function Materials({ optionSets, choices, onUpdate }) {
       {(optionSets || []).map((optionSet, i) => (
         <p key={i.toString()}>
           {(optionSet || []).map(({ gemImage, materials }, j) => (
-            <label
+            <button
               key={j.toString()}
-              role='button'
-              tabIndex='0'
-              onKeyUp={e => ['Enter', ' '].includes(e.key) && onUpdate({ ...choices, [i]: j })}
+              type='button'
               onClick={() => onUpdate({ ...choices, [i]: j })}
             >
               <Canvas
@@ -23,7 +21,7 @@ export default function Materials({ optionSets, choices, onUpdate }) {
                 image={choices[i] === j ? gemImage : gemOutline}
               />
               {materials}
-            </label>
+            </button>
           ))}
         </p>
       ))}

@@ -76,6 +76,11 @@ button {
   font-family: inherit;
   font-size: inherit;
   outline: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: 1px dotted #666;
+  }
 
   &[disabled] {
     background: #111;

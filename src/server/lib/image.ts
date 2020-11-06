@@ -2,6 +2,7 @@
 
 import sharp from 'sharp';
 
+import { Colour, Part } from './types';
 import { pixelGetter, pixelSetter, range } from './utils';
 
 
@@ -13,7 +14,7 @@ const options = {
 };
 
 export default {
-  async imageFromBuffer(buffer, width) {
+  async imageFromBuffer(buffer: Buffer, width: number) {
     return sharp(buffer, {
       raw: {
         ...options,
@@ -24,11 +25,11 @@ export default {
   },
 
   // Recolour a sword part with custom palettes.
-  async colourPart(partPath, colourSubs) {
+  async colourPart(partPath: string, colourSubs: Map<Colour, Colour>) {
     const image = sharp(partPath);
 
     const [{ width, height, channels }, buffer] = await Promise.all([
-      image.metadata(),
+      image.metadata() as Promise<{ width: number, height: number, channels: number }>,
       image.raw().toBuffer(),
     ]);
 
@@ -54,7 +55,7 @@ export default {
   },
 
   // Generate a composite image of a sword from of a set of parts and colour palettes.
-  async drawSword(layerParts, colourSubs) {
+  async drawSword(layerParts: Part[], colourSubs: Map<Colour, Colour>) {
     const layerImgs: Buffer[] = await Promise.all(
       layerParts.map(({ path }) => this.colourPart(path, colourSubs)));
 

@@ -5,6 +5,7 @@ import path from 'path';
 import sharp from 'sharp';
 
 import image from './image';
+import { Colour, Descs, Gradient, Material, Palette, Part } from './types';
 import { dataUrl, pixelGetter, range, readCsv } from './utils';
 
 
@@ -31,7 +32,7 @@ export default {
   // Get a list of descriptions for each part on each layer.
   async getPartDescriptions() {
     const rows = await readCsv(partNamesFile);
-    const descs = {};
+    const descs: Descs = {};
     let layer = '';
 
     rows.forEach(([name, desc]) => {
@@ -53,7 +54,7 @@ export default {
       this.getPartDescriptions(),
       fs.readdir(partsDir),
     ]);
-    const partsMap = {};
+    const parts: Part[] = [];
 
     files.forEach((filename) => {
       const m = filename.match(/^(\w+?)-([-\w]+)\.png$/);
@@ -61,7 +62,8 @@ export default {
         const layer = m[1];
         const name = m[2].replace('-', ' ');
         if (layers.includes(layer)) {
-          partsMap[layer] = (partsMap[layer] || []).concat({
+          parts.push({
+            layer,
             name,
             path: path.join(partsDir, filename),
             desc: descs[layer][name] || '',
@@ -70,7 +72,7 @@ export default {
       }
     });
 
-    return partsMap;
+    return parts;
   },
 
   // Get a list of lists of RGBA colour gradients from an image file.
@@ -79,7 +81,7 @@ export default {
     const img = sharp(paletteImage);
 
     const [{ width, height, channels }, buffer] = await Promise.all([
-      img.metadata(),
+      img.metadata() as Promise<{ width: number, height: number, channels: number }>,
       img.raw().toBuffer(),
     ]);
 
@@ -99,9 +101,9 @@ export default {
       readCsv(materialsFile),
     ]);
 
-    const palettes: any[] = [];
+    const palettes: Palette[] = [];
     let materialTypes: string[] = [];
-    let gradientSet = [];
+    let gradientSet: Gradient[] = [];
 
     await rows.reduce(async (lastRow, [paletteName, materialName, ...entries]) => {
       await lastRow;

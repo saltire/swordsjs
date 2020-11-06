@@ -20,7 +20,7 @@ router.postAsync('/continue', async (req, res) => {
   if (!req.session) {
     throw new Error('Session not found.');
   }
-  req.session.story = await story.nextStage(req.session.story, req.body);
+  req.session.story = await story.nextStage(req.session.story, req.body.choices);
   res.json({ story: story.formatStoryData(req.session.story) });
 });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 import bodyParser from 'body-parser';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import memorystore from 'memorystore';
 import morgan from 'morgan';
 import session from 'express-session';
@@ -24,9 +24,9 @@ app.use(session({
 app.use(routes);
 
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled error:', err);
-  res.status(err.status || 500).send(err.message);
+  res.status(500).send(err.message);
 });
 
 const port = process.env.PORT || 3001;

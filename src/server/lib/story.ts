@@ -2,7 +2,8 @@
 
 import data from './data';
 import swordgen from './swordgen';
-import text from './text';
+import { pronouns } from './text';
+import { Palette } from './types';
 import { aToAn, caseSub, conjugate, dataUrl, random } from './utils';
 
 
@@ -18,12 +19,33 @@ const colours = [
   '#df3e23', '#fa6a0a', '#f9a31b', '#fffc40', '#59c135', '#249fde', '#20d6c7', '#f5a097',
   '#e86a73', '#bc4a9b', '#bb7547', '#dba463', '#ba756a', '#849be4', '#5daf8d', '#a08662'];
 
+type Story = {
+  character?: {
+    adjective: string,
+    noun: string,
+    gender: string,
+    colour: string,
+  }
+  chapter?: string[],
+  descs?: { [layer: string]: string },
+  end: boolean,
+  image?: string,
+  optionSets?: Palette[],
+  page: number,
+  tags: string[],
+  text?: string,
+};
+
 export default {
-  async nextStage(currentStory?, input?) {
+  async nextStage(currentStory?: Story, choices?: number[]) {
     const [charData, chapters, weather] = await dataPromise;
 
     // Copy the ongoing story object, if it exists and isn't finished.
-    const story = (currentStory && !currentStory.end) ? { ...currentStory } : {};
+    const story: Story = (currentStory && !currentStory.end) ? { ...currentStory } : {
+      end: false,
+      page: 0,
+      tags: [],
+    };
 
     // Choose a random chapter and go to the first page.
     if (!story.chapter) {
@@ -51,16 +73,17 @@ export default {
       story.character = {
         adjective: random(charData.adjectives),
         noun: random(charData.nouns),
-        pronoun: random(['m', 'f', 'n']),
+        gender: random(['m', 'f', 'n']),
         colour: random(colours),
       };
     }
     if (story.tags.includes('options')) {
       story.optionSets = await swordgen.selectRandomPaletteOptions();
     }
-    if (input && input.choices) {
-      const { image, descs } = await swordgen.createSwordFromChoices(
-        story.optionSets, input.choices);
+    if (choices && story.optionSets) {
+      console.log({ choices });
+      const { image, descs } =
+        await swordgen.createSwordFromChoices(story.optionSets, choices);
       story.image = await dataUrl(image);
       story.descs = descs;
     }
@@ -72,11 +95,11 @@ export default {
         `${story.character.adjective} ${story.character.noun}`);
       story.text = caseSub(story.text, '$character', story.character.noun);
       // Character pronouns.
-      story.text = caseSub(story.text, '$he', text.hePronouns[story.character.pronoun]);
-      story.text = caseSub(story.text, '$him', text.himPronouns[story.character.pronoun]);
-      story.text = caseSub(story.text, '$his', text.hisPronouns[story.character.pronoun]);
+      story.text = caseSub(story.text, '$he', pronouns.he[story.character.gender]);
+      story.text = caseSub(story.text, '$him', pronouns.him[story.character.gender]);
+      story.text = caseSub(story.text, '$his', pronouns.his[story.character.gender]);
       // Character verbs.
-      story.text = conjugate(story.text, story.character.pronoun === 'n');
+      story.text = conjugate(story.text, story.character.gender === 'n');
     }
     if (story.descs) {
       // Sword descriptions.
@@ -92,7 +115,7 @@ export default {
     return story;
   },
 
-  formatStoryData(story) {
+  formatStoryData(story: Story) {
     return {
       text: story.text,
       charColour: story.character && story.character.colour,
@@ -106,7 +129,6 @@ export default {
               .join(' and '),
           }))),
       image: story.tags.includes('image') ? story.image : undefined,
-      desc: story.desc,
       end: story.end,
     };
   },

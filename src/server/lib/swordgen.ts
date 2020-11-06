@@ -3,6 +3,7 @@
 import data, { layers } from './data';
 import image from './image';
 import text from './text';
+import { Palette } from './types';
 import { random, range } from './utils';
 
 
@@ -18,7 +19,7 @@ export default {
   async selectRandomParts() {
     const { parts } = await dataPromise;
 
-    return layers.map(layer => ({ layer, ...random(parts[layer]) }));
+    return layers.map(layer => random(parts.filter(part => part.layer === layer)));
   },
 
   async selectRandomPaletteSubs() {
@@ -35,7 +36,7 @@ export default {
     return { colourSubs, materialSubs };
   },
 
-  async selectRandomPaletteOptions(count = 2) {
+  async selectRandomPaletteOptions(count = 2): Promise<Palette[]> {
     const { palettes } = await dataPromise;
 
     // There are two palettes: gold and silver. Pick [count] material options from each.
@@ -49,7 +50,7 @@ export default {
     });
   },
 
-  getPaletteSubsFromChoices(optionSets, choices) {
+  getPaletteSubsFromChoices(optionSets: Palette[], choices: number[]) {
     const colourSubs = new Map();
     const materialSubs = new Map();
     optionSets.forEach(({ srcGradient, materials }, p) => {
@@ -72,7 +73,7 @@ export default {
     };
   },
 
-  async createSwordFromChoices(optionSets, choices) {
+  async createSwordFromChoices(optionSets: Palette[], choices: number[]) {
     const layerParts = await this.selectRandomParts();
     const { colourSubs, materialSubs } = this.getPaletteSubsFromChoices(optionSets, choices);
 

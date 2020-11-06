@@ -36,7 +36,7 @@ export default class Story extends Component {
 
     this.setState({ loading: true });
     setTimeout(() => {
-      axios.post('/story/continue', optionSets ? { choices } : {})
+      axios.post('/story/continue', optionSets ? { choices: Object.values(choices) } : {})
         .then(resp => this.setState({
           story: resp.data.story,
           choices: {},

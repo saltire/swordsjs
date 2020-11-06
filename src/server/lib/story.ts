@@ -56,7 +56,7 @@ export default {
     // Build text for this stage, stripping tags from the beginning.
     story.tags = [];
     story.text = story.chapter[story.page]
-      .replace(/\*(\w+)\s*/g, (_, tag) => {
+      .replace(/\[(\w+)\]\s*/g, (_, tag) => {
         // Some tags can be replaced immediately with text.
         if (tag === 'weather') {
           return random(weather);
@@ -81,7 +81,6 @@ export default {
       story.optionSets = await swordgen.selectRandomPaletteOptions();
     }
     if (choices && story.optionSets) {
-      console.log({ choices });
       const { image, descs } =
         await swordgen.createSwordFromChoices(story.optionSets, choices);
       story.image = await dataUrl(image);

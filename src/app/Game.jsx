@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import './Game.scss';
@@ -7,87 +7,70 @@ import Description from './Description';
 import Materials from './Materials';
 
 
-export default class Game extends Component {
-  constructor(props) {
-    super(props);
+export default function Game() {
+  const [optionSets, setOptionSets] = useState(null);
+  const [choices, setChoices] = useState({});
+  const [image, setImage] = useState(null);
+  const [descs, setDescs] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    this.state = {
-      optionSets: null,
-      choices: {},
-      image: null,
-      descs: null,
-      loading: true,
-    };
+  const start = () => axios.get('/game/options')
+    .then(({ data }) => setOptionSets(data.optionSets))
+    .catch(console.error)
+    .finally(() => setTimeout(() => setLoading(false), 10));
 
-    this.forge = this.forge.bind(this);
-    this.restart = this.restart.bind(this);
-  }
+  useEffect(() => {
+    start();
+  }, []);
 
-  componentDidMount() {
-    this.start();
-  }
+  const restart = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setOptionSets(null);
+      setChoices({});
+      setImage(null);
+      setDescs(null);
+      start();
+    }, 750);
+  };
 
-  restart() {
-    this.setState({ loading: true });
-    setTimeout(() => this.start(), 750);
-  }
-
-  start() {
-    this.setState({
-      optionSets: null,
-      choices: {},
-      image: null,
-      descs: null,
-    });
-
-    axios.get('/game/options')
-      .then(resp => this.setState({ optionSets: resp.data.optionSets }))
-      .catch(console.error)
-      .finally(() => setTimeout(() => this.setState({ loading: false }), 10));
-  }
-
-  forge() {
-    const { choices } = this.state;
-
-    this.setState({ loading: true });
+  const forge = () => {
+    setLoading(true);
     setTimeout(() => {
       axios.post('/game/forge', { choices })
-        .then(resp => this.setState({
-          image: resp.data.image,
-          descs: resp.data.descs,
-        }))
+        .then(({ data }) => {
+          setImage(data.image);
+          setDescs(data.descs);
+        })
         .catch(console.error)
-        .finally(() => this.setState({ loading: false }));
+        .finally(() => setLoading(false));
     }, 750);
-  }
+  };
 
-  render() {
-    const { optionSets, choices, image, descs, loading } = this.state;
-    const complete = optionSets && (Object.keys(choices).length === optionSets.length);
+  const complete = optionSets && (Object.keys(choices).length === optionSets.length);
 
-    return (
-      <div className={`Game${loading ? ' hidden' : ''}`}>
-        {image && descs ? (
+  return (
+    <div className={`Game${loading ? ' hidden' : ''}`}>
+      {image && descs ? (
+        <>
+          <Canvas className='sword' image={image} />
+          <Description descs={descs} />
+          <button type='button' disabled={loading} onClick={restart}>↻</button>
+        </>
+      ) : (
+        optionSets && (
           <>
-            <Canvas className='sword' image={image} />
-            <Description descs={descs} />
-            <button type='button' disabled={loading} onClick={this.restart}>↻</button>
+            <Materials
+              optionSets={optionSets}
+              choices={choices}
+              onUpdate={setChoices}
+            />
+            <button type='button' disabled={loading || !complete} onClick={forge}>
+              Forge
+            </button>
           </>
-        ) : (
-          optionSets && (
-            <>
-              <Materials
-                optionSets={optionSets}
-                choices={choices}
-                onUpdate={ch => this.setState({ choices: ch })}
-              />
-              <button type='button' disabled={loading || !complete} onClick={this.forge}>
-                Forge
-              </button>
-            </>
-          )
-        )}
-      </div>
-    );
-  }
+        )
+      )}
+    </div>
+  );
 }

@@ -1,6 +1,3 @@
-import React from 'react';
-
-
 export default function Description({ descs }) {
   return descs && (
     <div className='Description'>

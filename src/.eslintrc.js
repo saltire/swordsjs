@@ -15,6 +15,7 @@ module.exports = {
     radix: [2, 'as-needed'],
     'react/jsx-one-expression-per-line': 0,
     'react/prop-types': 0,
+    'react/react-in-jsx-scope': 0,
     strict: [2, 'global'],
   },
 };

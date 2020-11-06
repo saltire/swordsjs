@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './Materials.scss';
 import Canvas from './Canvas';
 import gemOutline from './static/gem-outline.png';

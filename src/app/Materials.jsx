@@ -10,7 +10,7 @@ export default function Materials({ optionSets, choices, onUpdate }) {
     <form className='Materials'>
       {(optionSets || []).map((optionSet, i) => (
         <p key={i.toString()}>
-          {(optionSet || []).map(({ gemImage, materialNames }, j) => (
+          {(optionSet || []).map(({ gemImage, materialList }, j) => (
             <button
               key={j.toString()}
               type='button'
@@ -20,7 +20,7 @@ export default function Materials({ optionSets, choices, onUpdate }) {
                 className='gem'
                 image={choices[i] === j ? gemImage : gemOutline}
               />
-              {materialNames}
+              {materialList}
             </button>
           ))}
         </p>

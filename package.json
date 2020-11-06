@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "private": true,
   "main": "server/index.js",

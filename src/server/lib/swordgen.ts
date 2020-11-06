@@ -9,10 +9,10 @@ import { random, range } from './utils';
 // Fetch data in advance.
 const dataPromise = Promise
   .all([
-    data.getPaletteSets(),
+    data.getPalettes(),
     data.getParts(),
   ])
-  .then(([paletteSets, parts]) => ({ paletteSets, parts }));
+  .then(([palettes, parts]) => ({ palettes, parts }));
 
 export default {
   async selectRandomParts() {
@@ -22,30 +22,29 @@ export default {
   },
 
   async selectRandomPaletteSubs() {
-    const { paletteSets } = await dataPromise;
+    const { palettes } = await dataPromise;
 
     const colourSubs = new Map();
     const materialSubs = new Map();
-    paletteSets.forEach(({ srcColours, palettes }) => {
-      const { colours, materialNames } = random(palettes);
-      srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      materialNames.forEach(({ type, name }) => materialSubs.set(type, name));
+    palettes.forEach(({ srcGradient, materials }) => {
+      const { gradient, materialNames } = random(materials);
+      srcGradient.forEach((src, i) => colourSubs.set(src, gradient[i]));
+      Object.entries(materialNames).forEach(([type, name]) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };
   },
 
   async selectRandomPaletteOptions(count = 2) {
-    const { paletteSets } = await dataPromise;
+    const { palettes } = await dataPromise;
 
-    // There are two palette sets: gold and silver. Pick [count] palette options from each.
-    return paletteSets.map(({ srcColours, palettes }) => {
-      const palettesCopy = [...palettes];
+    // There are two palettes: gold and silver. Pick [count] material options from each.
+    return palettes.map(({ srcGradient, materials }) => {
+      const materialsCopy = [...materials];
       return {
-        srcColours,
-        palettes: range(count)
-          .map(() => palettesCopy.splice(Math.floor(Math.random() * palettesCopy.length), 1))
-          .flat(),
+        srcGradient,
+        materials: range(count)
+          .flatMap(() => materialsCopy.splice(Math.floor(Math.random() * materialsCopy.length), 1)),
       };
     });
   },
@@ -53,10 +52,10 @@ export default {
   getPaletteSubsFromChoices(optionSets, choices) {
     const colourSubs = new Map();
     const materialSubs = new Map();
-    optionSets.forEach(({ srcColours, palettes }, p) => {
-      const { colours, materialNames } = palettes[choices[p]];
-      srcColours.forEach((src, i) => colourSubs.set(src, colours[i]));
-      materialNames.forEach(({ type, name }) => materialSubs.set(type, name));
+    optionSets.forEach(({ srcGradient, materials }, p) => {
+      const { gradient, materialNames } = materials[choices[p]];
+      srcGradient.forEach((src, i) => colourSubs.set(src, gradient[i]));
+      Object.entries(materialNames).forEach(([type, name]) => materialSubs.set(type, name));
     });
 
     return { colourSubs, materialSubs };

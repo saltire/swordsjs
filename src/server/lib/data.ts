@@ -16,8 +16,8 @@ const paletteImage = path.resolve(dataDir, 'palette8.png');
 
 const chaptersFile = path.resolve(dataDir, 'chapters.csv');
 const charactersFile = path.resolve(dataDir, 'characters.csv');
+const materialsFile = path.resolve(dataDir, 'materials.csv');
 const partNamesFile = path.resolve(dataDir, 'parts.csv');
-const paletteNamesFile = path.resolve(dataDir, 'palettes.csv');
 const weatherFile = path.resolve(dataDir, 'weather.csv');
 
 export const layers = [
@@ -73,8 +73,8 @@ export default {
     return partsMap;
   },
 
-  // Get a list of lists of RGBA colour palettes from an image file.
-  async getColourSets() {
+  // Get a list of lists of RGBA colour gradients from an image file.
+  async getGradientSets() {
     const ph = 8;
     const img = sharp(paletteImage);
 
@@ -85,57 +85,57 @@ export default {
 
     const getPixel = pixelGetter(buffer, width, channels);
 
-    return range(Math.floor((height || 0) / ph)) // each palette set
-      .map(p => (p * (ph + 1))) // the top of each palette set
-      .map(py => range(width) // each palette in the set
+    return range(Math.floor((height || 0) / ph)) // each gradient set
+      .map(p => (p * (ph + 1))) // the top of each gradient set
+      .map(py => range(width) // each gradient in the set
         .filter(px => (getPixel(px, py)[3] > 0)) // non-transparent pixels
         .map(px => range(ph).map(y => getPixel(px, py + y)))); // each of 8 pixels down
   },
 
-  // Get a list of palettes and material names from a CSV file and add their colours.
-  async getPaletteSets() {
-    const [colourSets, rows] = await Promise.all([
-      this.getColourSets(),
-      readCsv(paletteNamesFile),
+  // Get a list of materials from a CSV file and add their colours.
+  async getPalettes() {
+    const [gradientSets, rows] = await Promise.all([
+      this.getGradientSets(),
+      readCsv(materialsFile),
     ]);
 
-    const paletteSets: any[] = [];
+    const palettes: any[] = [];
     let materialTypes: string[] = [];
-    let colourSet = [];
+    let gradientSet = [];
 
-    await rows.reduce(async (lastRow, [setname, name, ...entries]) => {
+    await rows.reduce(async (lastRow, [paletteName, materialName, ...entries]) => {
       await lastRow;
 
-      // If there's an entry in the first column, it's a header for a palette set.
-      // Get the corresponding set of colour palettes,
+      // If there's an entry in the first column, it's a header for a palette.
+      // Get the corresponding set of colour gradients,
       // and the names of the material types starting from the third column.
-      if (setname) {
+      if (paletteName) {
         materialTypes = entries.filter(Boolean);
-        colourSet = colourSets[paletteSets.length];
-        paletteSets.push({
-          srcColours: colourSet[0],
-          palettes: [],
+        gradientSet = gradientSets[palettes.length];
+        palettes.push({
+          srcGradient: gradientSet[0],
+          materials: [],
         });
       }
 
-      // If there's an entry in the second column, it's a palette.
-      // Get the internal name of the palette and the name for its material of each type.
-      else if (name) {
-        const paletteSet = paletteSets[paletteSets.length - 1];
-        const paletteColours = colourSet[paletteSet.palettes.length];
-        const colourSubs = new Map(paletteSets[0].srcColours.map(
-          (src, i) => [src, paletteColours[i]]));
-        paletteSet.palettes.push({
-          name,
-          materialNames: materialTypes.map((type, i) => ({ type, name: entries[i] })),
-          colours: paletteColours,
+      // If there's an entry in the second column, it's a material in the palette.
+      // Get its internal name and its display name for each material type.
+      else if (materialName) {
+        const palette = palettes[palettes.length - 1];
+        const gradient = gradientSet[palette.materials.length];
+        const colourSubs = new Map(palettes[0].srcGradient.map(
+          (src, i) => [src, gradient[i]]));
+        palette.materials.push({
+          name: materialName,
+          materialNames: Object.fromEntries(materialTypes.map((type, i) => [type, entries[i]])),
+          gradient,
           gemImage: await dataUrl(await image.imageFromBuffer(
             await image.colourPart(gemImage, colourSubs), 10)),
         });
       }
     }, Promise.resolve());
 
-    return paletteSets;
+    return palettes;
   },
 
   async getCharacterData() {

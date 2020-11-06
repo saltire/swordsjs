@@ -97,12 +97,12 @@ export default {
       text: story.text,
       charColour: story.character && story.character.colour,
       optionSets: story.optionSets && !story.descs && story.optionSets
-        .map(({ palettes }) => Object.values(palettes)
+        .map(({ materials }) => Object.values(materials)
           .map(({ gemImage, materialNames }) => ({
             gemImage,
-            materialNames: Array
-              .from(new Set(materialNames
-                .map(({ name }) => name.replace('*', ''))))
+            materialList: Array
+              .from(new Set(Object.values(materialNames)
+                .map((name: string) => name.replace('*', ''))))
               .join(' and '),
           }))),
       image: story.tags.includes('image') ? story.image : undefined,

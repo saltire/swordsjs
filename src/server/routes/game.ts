@@ -17,12 +17,11 @@ router.getAsync('/options', async (req, res) => {
   req.session.optionSets = optionSets;
   res.json({
     optionSets: optionSets
-      .map(({ palettes }) => Object.values(palettes)
+      .map(({ materials }) => Object.values(materials)
         .map(({ gemImage, materialNames }) => ({
           gemImage,
-          materialNames: Array
-            .from(new Set(materialNames
-              .map(({ name }) => name.replace('*', ''))))
+          materialList: Array
+            .from(new Set(Object.values(materialNames).map((name: string) => name.replace('*', ''))))
             .join(' and '),
         }))),
   });

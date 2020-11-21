@@ -15,6 +15,10 @@ const app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(session({
+  cookie: {
+    sameSite: true,
+    // secure: true,
+  },
   resave: false,
   saveUninitialized: false,
   secret: process.env.SESSION_SECRET || 'session-secret-string',
@@ -25,12 +29,9 @@ app.use(session({
 
 app.use('/api', api);
 
-// Serve client from dist folder only in production.
-if (process.env.NODE_ENV === 'production') {
-  // Rewrite all routes under /* (without a dot in the filename) to go to /
-  app.use('/', history({ index: '/' }));
-  app.use('/', express.static(path.resolve(__dirname, '../dist')));
-}
+// Rewrite all routes under /* (without a dot in the filename) to go to /
+app.use('/', history({ index: '/' }));
+app.use('/', express.static(path.resolve(__dirname, '../dist')));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

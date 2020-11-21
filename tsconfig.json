@@ -10,7 +10,8 @@
     "noImplicitThis": true,
     "outDir": "./built",
     "strictNullChecks": true,
-    "target": "es6"
+    "target": "es6",
+    "types": []
   },
   "include": ["server/**/*"]
 }

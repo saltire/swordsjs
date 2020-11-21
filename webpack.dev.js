@@ -1,4 +1,4 @@
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { HotModuleReplacementPlugin } = require('webpack');
@@ -20,6 +20,7 @@ module.exports = merge(common, {
     contentBase: './dist',
     historyApiFallback: { index: '/' },
     proxy: { '/api': `http://localhost:${process.env.PORT || 3001}` },
+    stats: 'minimal',
   },
   devtool: 'eval-source-map',
   plugins: [

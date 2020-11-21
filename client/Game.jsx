@@ -14,7 +14,7 @@ export default function Game() {
   const [descs, setDescs] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const start = () => axios.get('/game/options')
+  const start = () => axios.get('/api/game/options')
     .then(({ data }) => setOptionSets(data.optionSets))
     .catch(console.error)
     .finally(() => setTimeout(() => setLoading(false), 10));
@@ -37,7 +37,7 @@ export default function Game() {
   const forge = () => {
     setLoading(true);
     setTimeout(() => {
-      axios.post('/game/forge', { choices })
+      axios.post('/api/game/forge', { choices })
         .then(({ data }) => {
           setImage(data.image);
           setDescs(data.descs);

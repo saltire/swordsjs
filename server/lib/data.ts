@@ -9,7 +9,7 @@ import { Colour, Descs, Gradient, Material, Palette, Part } from './types';
 import { dataUrl, pixelGetter, range, readCsv } from './utils';
 
 
-const dataDir = path.resolve(__dirname, '../../../data');
+const dataDir = path.resolve(__dirname, '../../data');
 const partsDir = path.resolve(dataDir, 'parts');
 
 const gemImage = path.resolve(dataDir, 'gem.png');

@@ -8,12 +8,11 @@ import { aToAn, caseSub, conjugate, dataUrl, random } from './utils';
 
 
 // Fetch data in advance.
-const dataPromise = Promise.all(
-  [
-    data.getCharacterData(),
-    data.getStoryChapters(),
-    data.getWeather(),
-  ]);
+const dataPromise = Promise.all([
+  data.getCharacterData(),
+  data.getStoryChapters(),
+  data.getWeather(),
+]);
 
 const colours = [
   '#df3e23', '#fa6a0a', '#f9a31b', '#fffc40', '#59c135', '#249fde', '#20d6c7', '#f5a097',

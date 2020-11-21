@@ -13,7 +13,7 @@ module.exports = merge(common, {
   plugins: [
     new CleanWebpackPlugin(),
     new CopyPlugin({
-      patterns: [path.resolve(__dirname, 'app/index.ejs')],
+      patterns: [path.resolve(__dirname, 'client/index.ejs')],
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

@@ -18,4 +18,12 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     strict: [2, 'global'],
   },
+  overrides: [
+    {
+      files: ['webpack.*.js'],
+      rules: {
+        'import/no-extraneous-dependencies': 0,
+      },
+    },
+  ],
 };

@@ -9,15 +9,17 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
   mode: 'development',
   entry: {
-    index: [
-      'webpack-hot-middleware/client',
-      path.resolve(__dirname, 'app/index.jsx'),
-    ],
+    index: path.resolve(__dirname, 'client/index.jsx'),
   },
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
     },
+  },
+  devServer: {
+    contentBase: './dist',
+    historyApiFallback: { index: '/' },
+    proxy: { '/api': `http://localhost:${process.env.PORT || 3001}` },
   },
   devtool: 'eval-source-map',
   plugins: [
@@ -27,4 +29,5 @@ module.exports = merge(common, {
       chunkFilename: '[name].css',
     }),
   ],
+  stats: 'minimal',
 });

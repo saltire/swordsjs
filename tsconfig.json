@@ -12,5 +12,5 @@
     "strictNullChecks": true,
     "target": "es6"
   },
-  "include": ["src/server/**/*"]
+  "include": ["server/**/*"]
 }

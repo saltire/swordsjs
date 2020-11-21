@@ -13,7 +13,7 @@ export default function Story() {
   const [choices, setChoices] = useState({});
 
   useEffect(() => {
-    axios.get('/story/state')
+    axios.get('/api/story/state')
       .then(({ data }) => {
         setStory(data.story);
         setChoices({});
@@ -27,7 +27,7 @@ export default function Story() {
 
     setLoading(true);
     setTimeout(() => {
-      axios.post('/story/continue', optionSets ? { choices: Object.values(choices) } : {})
+      axios.post('/api/story/continue', optionSets ? { choices: Object.values(choices) } : {})
         .then(({ data }) => {
           setStory(data.story);
           setChoices({});

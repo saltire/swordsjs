@@ -14,7 +14,7 @@ export default function Sword() {
   function reload() {
     setLoading(true);
 
-    axios.get('/sword/data')
+    axios.get('/api/sword/data')
       .then(({ data }) => {
         setImage(data.image);
         setDescs(data.descs);

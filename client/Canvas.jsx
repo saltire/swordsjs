@@ -20,7 +20,7 @@ export default function Canvas({ image, className, onClick }) {
       };
       img.src = image;
     }
-  }, image);
+  }, [image]);
 
   return <canvas className={`Canvas ${className || ''}`} ref={canvas} onClick={onClick} />;
 }

@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import axios from 'axios';
-import reactStringReplace from 'react-string-replace';
 
 import './Story.scss';
 import Canvas from './Canvas';
 import Materials from './Materials';
 import { StoryData } from './types';
 
+
+const stringReplace = (str: string, re: RegExp, fn: (match: string, i: number) => ReactNode) =>
+  (str || '').split(re).map((part, i) => (i % 2 === 0 ? part : fn(part, i)));
 
 export default function Story() {
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export default function Story() {
   return story && (
     <div className={`Story${loading ? ' hidden' : ''}`}>
       <p>
-        {!charColour ? text : reactStringReplace(text, /["“](.*?)["”]/g,
+        {!charColour ? text : stringReplace(text || '', /["“](.*?)["”]/g,
           (match, i) => <span key={i} style={{ color: charColour }}>“{match}”</span>)}
       </p>
 

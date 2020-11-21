@@ -4,11 +4,12 @@ import axios from 'axios';
 import './Sword.scss';
 import Canvas from './Canvas';
 import Description from './Description';
+import { Descriptions } from './types';
 
 
 export default function Sword() {
-  const [image, setImage] = useState(null);
-  const [descs, setDescs] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [descs, setDescs] = useState<Descriptions | null>(null);
   const [loading, setLoading] = useState(false);
 
   function reload() {

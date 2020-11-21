@@ -1,9 +1,17 @@
 import './Materials.scss';
 import Canvas from './Canvas';
+import { Choices, Option } from './types';
+// @ts-ignore
 import gemOutline from './static/gem-outline.png';
 
 
-export default function Materials({ optionSets, choices, onUpdate }) {
+interface MaterialsProps {
+  optionSets: Option[][],
+  choices: Choices,
+  onUpdate: (choices: Choices) => void,
+}
+
+export default function Materials({ optionSets, choices, onUpdate }: MaterialsProps) {
   return (
     <form className='Materials'>
       {(optionSets || []).map((optionSet, i) => (

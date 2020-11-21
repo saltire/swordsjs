@@ -7,7 +7,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    index: path.resolve(__dirname, 'client/index.jsx'),
+    index: path.resolve(__dirname, 'client/index.tsx'),
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -19,7 +19,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         use: 'babel-loader',
       },
@@ -44,7 +44,7 @@ module.exports = {
     splitChunks: { chunks: 'all' },
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   plugins: [
     new HtmlPlugin({

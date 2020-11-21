@@ -1,6 +1,5 @@
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const path = require('path');
 const { HotModuleReplacementPlugin } = require('webpack');
 
 const common = require('./webpack.common.js');
@@ -8,9 +7,6 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: 'development',
-  entry: {
-    index: path.resolve(__dirname, 'client/index.jsx'),
-  },
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',

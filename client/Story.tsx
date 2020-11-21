@@ -5,11 +5,12 @@ import reactStringReplace from 'react-string-replace';
 import './Story.scss';
 import Canvas from './Canvas';
 import Materials from './Materials';
+import { StoryData } from './types';
 
 
 export default function Story() {
   const [loading, setLoading] = useState(true);
-  const [story, setStory] = useState(null);
+  const [story, setStory] = useState<StoryData | null>(null);
   const [choices, setChoices] = useState({});
 
   useEffect(() => {

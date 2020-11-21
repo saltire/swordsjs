@@ -5,13 +5,14 @@ import './Game.scss';
 import Canvas from './Canvas';
 import Description from './Description';
 import Materials from './Materials';
+import { Descriptions, Option } from './types';
 
 
 export default function Game() {
-  const [optionSets, setOptionSets] = useState(null);
+  const [optionSets, setOptionSets] = useState<Option[][] | null>(null);
   const [choices, setChoices] = useState({});
-  const [image, setImage] = useState(null);
-  const [descs, setDescs] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [descs, setDescs] = useState<Descriptions | null>(null);
   const [loading, setLoading] = useState(true);
 
   const start = () => axios.get('/api/game/options')
@@ -51,7 +52,7 @@ export default function Game() {
 
   return (
     <div className={`Game${loading ? ' hidden' : ''}`}>
-      {image && descs ? (
+      {(image && descs) ? (
         <>
           <Canvas className='sword' image={image} />
           <Description descs={descs} />

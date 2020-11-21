@@ -1,14 +1,24 @@
 'use strict';
 
 import { Router } from '@awaitjs/express';
+import { Request } from 'express';
+import { Session } from 'express-session';
 
-import story from '../lib/story';
+import story, { Story } from '../lib/story';
 
+
+interface StorySession extends Session {
+  story?: Story,
+}
+
+interface StoryRequest extends Request {
+  session: StorySession,
+}
 
 const router = Router();
 export default router;
 
-router.getAsync('/state', async (req, res) => {
+router.getAsync('/state', async (req: StoryRequest, res) => {
   if (!req.session) {
     throw new Error('Session not found.');
   }
@@ -16,7 +26,7 @@ router.getAsync('/state', async (req, res) => {
   res.json({ story: story.formatStoryData(req.session.story) });
 });
 
-router.postAsync('/continue', async (req, res) => {
+router.postAsync('/continue', async (req: StoryRequest, res) => {
   if (!req.session) {
     throw new Error('Session not found.');
   }
@@ -24,7 +34,7 @@ router.postAsync('/continue', async (req, res) => {
   res.json({ story: story.formatStoryData(req.session.story) });
 });
 
-router.get('/start', (req, res) => {
+router.get('/start', (req: StoryRequest, res) => {
   if (!req.session) {
     throw new Error('Session not found.');
   }

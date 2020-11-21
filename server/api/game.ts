@@ -1,15 +1,26 @@
 'use strict';
 
 import { Router } from '@awaitjs/express';
+import { Request } from 'express';
+import { Session } from 'express-session';
 
 import swordgen from '../lib/swordgen';
+import { Palette } from '../lib/types';
 import { dataUrl } from '../lib/utils';
 
+
+interface GameSession extends Session {
+  optionSets?: Palette[],
+}
+
+interface GameRequest extends Request {
+  session: GameSession,
+}
 
 const router = Router();
 export default router;
 
-router.getAsync('/options', async (req, res) => {
+router.getAsync('/options', async (req: GameRequest, res) => {
   if (!req.session) {
     throw new Error('Session not found.');
   }
@@ -27,7 +38,7 @@ router.getAsync('/options', async (req, res) => {
   });
 });
 
-router.postAsync('/forge', async (req, res) => {
+router.postAsync('/forge', async (req: GameRequest, res) => {
   if (!(req.session && req.session.optionSets)) {
     throw new Error('Session not found.');
   }

@@ -1,5 +1,3 @@
-'use strict';
-
 import swordgen from './lib/swordgen';
 
 

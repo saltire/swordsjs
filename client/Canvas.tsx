@@ -1,13 +1,12 @@
-import { MouseEvent, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 
 interface CanvasProps {
   image: string | null,
-  className?: string,
-  onClick?: (e: MouseEvent) => void,
+  className: string,
 }
 
-export default function Canvas({ image, className, onClick }: CanvasProps) {
+export default function Canvas({ image, className = '' }: CanvasProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -30,5 +29,5 @@ export default function Canvas({ image, className, onClick }: CanvasProps) {
     }
   }, [image]);
 
-  return <canvas className={`Canvas ${className || ''}`} ref={canvas} onClick={onClick} />;
+  return <canvas className={`Canvas ${className}`} ref={canvas} />;
 }

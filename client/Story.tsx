@@ -7,8 +7,8 @@ import Materials from './Materials';
 import { StoryData } from './types';
 
 
-const stringReplace = (str: string, re: RegExp, fn: (match: string, i: number) => ReactNode) =>
-  (str || '').split(re).map((part, i) => (i % 2 === 0 ? part : fn(part, i)));
+const stringReplace = (str: string, re: RegExp, fn: (match: string, i: number) => ReactNode) => (
+  (str || '').split(re).map((part, i) => (i % 2 === 0 ? part : fn(part, i))));
 
 export default function Story() {
   const [loading, setLoading] = useState(true);

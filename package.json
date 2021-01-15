@@ -16,7 +16,7 @@
     "build:server": "tsc -p server",
     "build:client": "webpack --config webpack.prod.js",
     "build": "npm run build:server && npm run build:client",
-    "lint": "eslint ./src"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@awaitjs/express": "^0.6.3",
@@ -49,6 +49,8 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/sharp": "^0.26.1",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
     "babel-loader": "^8.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^5.3.0",

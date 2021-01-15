@@ -1,5 +1,3 @@
-'use strict';
-
 import data from './data';
 import swordgen from './swordgen';
 import { pronouns } from './text';

@@ -1,5 +1,3 @@
-'use strict';
-
 import { Router } from '@awaitjs/express';
 import { Request } from 'express';
 import { Session } from 'express-session';
@@ -42,7 +40,7 @@ router.postAsync('/forge', async (req: GameRequest, res) => {
   if (!(req.session && req.session.optionSets)) {
     throw new Error('Session not found.');
   }
-  const optionSets = req.session.optionSets;
+  const { optionSets } = req.session;
   delete req.session.optionSets;
 
   const { choices } = req.body;

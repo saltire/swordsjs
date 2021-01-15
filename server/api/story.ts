@@ -1,5 +1,3 @@
-'use strict';
-
 import { Router } from '@awaitjs/express';
 import { Request } from 'express';
 import { Session } from 'express-session';

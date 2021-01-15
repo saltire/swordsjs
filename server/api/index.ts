@@ -1,5 +1,3 @@
-'use strict';
-
 import { Router } from '@awaitjs/express';
 
 import game from './game';

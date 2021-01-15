@@ -1,5 +1,3 @@
-'use strict';
-
 import bodyParser from 'body-parser';
 import express, { Request, Response, NextFunction } from 'express';
 import history from 'connect-history-api-fallback';
@@ -33,7 +31,7 @@ app.use('/api', api);
 app.use('/', history({ index: '/' }));
 app.use('/', express.static(path.resolve(__dirname, '../dist')));
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled error:', err);
   res.status(500).send(err.message);

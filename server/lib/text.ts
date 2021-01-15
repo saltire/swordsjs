@@ -1,5 +1,3 @@
-'use strict';
-
 import { Part } from './types';
 import { aToAn } from './utils';
 

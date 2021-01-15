@@ -1,5 +1,3 @@
-'use strict';
-
 import data, { layers } from './data';
 import image from './image';
 import text from './text';

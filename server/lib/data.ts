@@ -1,11 +1,9 @@
-'use strict';
-
 import { promises as fs } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
 import image from './image';
-import { Colour, Descs, Gradient, Material, Palette, Part } from './types';
+import { Descs, Gradient, Palette, Part } from './types';
 import { dataUrl, pixelGetter, range, readCsv } from './utils';
 
 

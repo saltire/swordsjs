@@ -1,5 +1,3 @@
-'use strict';
-
 import sharp from 'sharp';
 
 import { Colour, Part } from './types';

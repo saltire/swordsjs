@@ -1,8 +1,8 @@
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 
 module.exports = {
@@ -10,11 +10,11 @@ module.exports = {
     index: path.resolve(__dirname, 'client/index.tsx'),
   },
   output: {
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[chunkhash].js',
     hashDigestLength: 8,
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
   },
   module: {
     rules: [
@@ -25,10 +25,10 @@ module.exports = {
       },
       {
         test: /\.s?css$/,
-        use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(jpe?g|gif|png|eot|svg|ttf|woff2?)$/,
+        test: /\.(jpe?g|gif|png|svg|eot|otf|ttf|woff2?)$/,
         use: [{
           loader: 'file-loader',
           options: { name: '[name].[contenthash:8].[ext]' },
@@ -36,15 +36,15 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  },
   optimization: {
     minimizer: [
       new TerserPlugin(),
       new CssMinimizerPlugin(),
     ],
     splitChunks: { chunks: 'all' },
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   plugins: [
     new HtmlPlugin({
